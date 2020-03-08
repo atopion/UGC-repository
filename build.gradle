@@ -5,6 +5,7 @@ plugins {
 }
 
 group 'com.atopion'
+// TODO: Introduce variables for automatic build-number update.
 version '0.2-SNAPSHOT'
 
 sourceCompatibility = 1.8
