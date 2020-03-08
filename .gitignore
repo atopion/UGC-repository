@@ -2,3 +2,4 @@ secrets.env
 /.gradle/
 /.idea/
 /gradle/
+/build/

@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  api:
+    image: ugc-api:latest
+    ports:
+      - "8080:8080"
+    depends_on:
+      - 'database'
+    container_name: api
+    networks:
+      - "ugc-rep-default"
+
+  database:
+    image: mariadb:10.5.1-bionic
+    ports:
+      - "3306:3306"
+    container_name: database
+    restart: always
+    networks:
+      - "ugc-rep-default"
+    volumes:
+      - "db-data:/var/lib/mysql:rw"
+      - "/c/code/java/UGC-rep/db/logs:/var/log/mysql:rw"
+      - "/c/code/java/UGC-rep/db/mariadb.cnf:/etc/my.cnf"
+    environment:
+      MYSQL_ROOT_PASSWORD: "1111"
+
+networks:
+  ugc-rep-default:
+
+volumes:
+  db-data:
