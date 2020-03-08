@@ -1,0 +1,52 @@
+plugins {
+    id 'org.springframework.boot' version '2.2.0.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id 'java'
+}
+
+group 'com.atopion'
+version '0.2-SNAPSHOT'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    runtimeOnly 'mysql:mysql-connector-java'
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task run(type:Exec) {
+    dependsOn 'build'
+    commandLine 'java', '-jar', 'build/libs/UGC-repository-' + version + '.jar'
+}
+
+task buildDocker(type:Exec) {
+    dependsOn 'build'
+
+    def dockerfilesrc = System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows') ?
+            '.\\src\\main\\docker\\Dockerfile' :
+            './src/main/docker/Dockerfile'
+
+    commandLine 'docker', 'build', '-t', 'ugc-api:latest', '-t', 'ugc-api:' + version, '-f', dockerfilesrc, '.'
+}
+
+task runDocker(type:Exec) {
+    dependsOn 'buildDocker'
+
+    commandLine 'docker-compose', 'down'
+    commandLine 'docker-compose', 'up'
+}
