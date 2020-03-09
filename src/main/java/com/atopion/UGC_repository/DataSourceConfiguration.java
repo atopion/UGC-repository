@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
+import java.util.Objects;
 
 @Configuration
 public class DataSourceConfiguration {
@@ -50,6 +51,7 @@ public class DataSourceConfiguration {
         private String username;
         private String password;
         private String driverClassName;
+        private int maximumPoolSize;
 
         @Override
         public String toString() {
@@ -58,6 +60,24 @@ public class DataSourceConfiguration {
                     "', password='" + password +
                     ", driverClassName=" + driverClassName +
                     "'}";
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null) return false;
+            if (!(o instanceof SQLConfiguration)) return false;
+            SQLConfiguration that = (SQLConfiguration) o;
+            return maximumPoolSize == that.maximumPoolSize &&
+                    Objects.equals(url, that.url) &&
+                    Objects.equals(username, that.username) &&
+                    Objects.equals(password, that.password) &&
+                    Objects.equals(driverClassName, that.driverClassName);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(url, username, password, driverClassName, maximumPoolSize);
         }
 
         public String getUrl() {
@@ -90,6 +110,14 @@ public class DataSourceConfiguration {
 
         public void setDriverClassName(String driverClassName) {
             this.driverClassName = driverClassName;
+        }
+
+        public int getMaximumPoolSize() {
+            return maximumPoolSize;
+        }
+
+        public void setMaximumPoolSize(int maximumPoolSize) {
+            this.maximumPoolSize = maximumPoolSize;
         }
     }
 
@@ -103,6 +131,7 @@ public class DataSourceConfiguration {
         private String username;
         private String password;
         private String driverClassName;
+        private int maximumPoolSize;
 
         @Override
         public String toString() {
@@ -111,6 +140,24 @@ public class DataSourceConfiguration {
                     "', password='" + password +
                     ", driverClassName=" + driverClassName +
                     "'}";
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null) return false;
+            if (!(o instanceof RESTConfiguration)) return false;
+            RESTConfiguration that = (RESTConfiguration) o;
+            return maximumPoolSize == that.maximumPoolSize &&
+                    Objects.equals(url, that.url) &&
+                    Objects.equals(username, that.username) &&
+                    Objects.equals(password, that.password) &&
+                    Objects.equals(driverClassName, that.driverClassName);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(url, username, password, driverClassName, maximumPoolSize);
         }
 
         public String getUrl() {
@@ -143,6 +190,14 @@ public class DataSourceConfiguration {
 
         public void setDriverClassName(String driverClassName) {
             this.driverClassName = driverClassName;
+        }
+
+        public int getMaximumPoolSize() {
+            return maximumPoolSize;
+        }
+
+        public void setMaximumPoolSize(int maximumPoolSize) {
+            this.maximumPoolSize = maximumPoolSize;
         }
     }
 }
