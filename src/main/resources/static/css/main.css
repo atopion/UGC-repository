@@ -1,0 +1,9 @@
+.table {
+    width: 90%;
+    min-width: 320px;
+
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translate(-50%);
+}

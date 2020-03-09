@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Result for Query</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
+    <script th:src="@{/js/jquery-3.4.1.slim.min.js}"></script>
+    <script th:src="@{/js/popper-1.16.0.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
+
+</head>
+<body>
+
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th th:each="header : ${table_headers}" th:text="${header}"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="row : ${table_rows}">
+                <td th:each="cell : ${row}" th:text="${cell}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>

@@ -20,6 +20,7 @@ dependencies {
         exclude group: 'com.zaxxer', module: 'HikariCP'
     }
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.apache.tomcat:tomcat-jdbc:9.0.10'
     runtimeOnly 'mysql:mysql-connector-java'
 
@@ -31,6 +32,8 @@ dependencies {
 }
 
 test {
+    if(project.hasProperty('excludeTests')) enabled = false
+
     useJUnitPlatform()
 }
 
