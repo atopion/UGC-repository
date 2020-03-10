@@ -4,11 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -35,7 +37,7 @@ public class SQLController {
         SQLResponseObject queryResult = executeQuery(query);
 
         if(queryResult == null) {
-            return "";
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden");
         }
 
         model.addAttribute("table_headers", queryResult.getHeaders());
@@ -50,7 +52,7 @@ public class SQLController {
         SQLResponseObject queryResult = executeQuery(query);
 
         if(queryResult == null) {
-            return null;
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden");
         }
 
         return produceJSON(queryResult);
@@ -62,7 +64,7 @@ public class SQLController {
         SQLResponseObject queryResult = executeQuery(query);
 
         if(queryResult == null) {
-            return null;
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden");
         }
 
         return produceXML(queryResult);
@@ -72,19 +74,25 @@ public class SQLController {
     private SQLResponseObject executeQuery(String query) {
 
         if(query.equals(""))
-            return null;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Query cannot be empty.");
+
+        // Securing the Query 1: Replacing the first word with SELECT (Limiting to SELECT Queries)
+        query = "SELECT" + query.substring(query.indexOf(' '));
+
+        // Securing the Query 2: Deleting everything after the first semicolon (Limiting to one query)
+        query = query.substring(0, query.indexOf(';'));
+
+        // Securing the Query 3: Turning SELECT INTO into SELECT
+        if(query.toUpperCase().startsWith("SELECT INTO"))
+            query = "SELECT" + query.substring(11);
 
         SQLResponseObject result = new SQLResponseObject();
 
-        Connection connection = null;
-        Statement sqlStatement = null;
-        ResultSet set = null;
 
-        try {
-            connection = sqlDataSource.getConnection();
-            sqlStatement = connection.createStatement();
+        try (Connection connection = sqlDataSource.getConnection();
+             Statement sqlStatement = connection.createStatement();
+             ResultSet set = sqlStatement.executeQuery(query)) {
 
-            set = sqlStatement.executeQuery(query);
             ResultSetMetaData metaData = set.getMetaData();
 
             for(int i = 1; i <= metaData.getColumnCount(); i++)
@@ -98,19 +106,9 @@ public class SQLController {
             }
 
         } catch (SQLException ex) {
-            logger.error("SQL Exception occured: " + ex.getMessage());
+            logger.error("SQL Exception occurred: " + ex.getMessage());
+            logger.info("Query was: " + query);
             result = null;
-        } finally {
-            try {
-                if (set != null)
-                    set.close();
-                if (sqlStatement != null)
-                    sqlStatement.close();
-                if (connection != null)
-                    connection.close();
-            } catch (Exception e) {
-                logger.error("Exception on closing occured: " + e.getMessage());
-            }
         }
 
         return result;
@@ -145,9 +143,9 @@ public class SQLController {
             for(int i = 0; i < row.size(); i++) {
                 result.append("\t\t<").append(object.getHeaders().get(i)).append('>')
                       .append(row.get(i))
-                      .append("</").append(object.getHeaders().get(i)).append('>');
+                      .append("</").append(object.getHeaders().get(i)).append(">\n");
             }
-            result.append("\t</element>");
+            result.append("\t</element>\n");
         }
         result.append("</response>");
 

@@ -12,17 +12,8 @@ public class SQLResponseObject {
         this.rows = new LinkedList<>();
     }
 
-    public SQLResponseObject(LinkedList<String> headers, LinkedList<LinkedList<String>> rows) {
-        this.headers = headers;
-        this.rows = rows;
-    }
-
     public LinkedList<String> getHeaders() {
         return headers;
-    }
-
-    public void setHeaders(LinkedList<String> headers) {
-        this.headers = headers;
     }
 
     public void addHeader(String header) {
@@ -31,10 +22,6 @@ public class SQLResponseObject {
 
     public LinkedList<LinkedList<String>> getRows() {
         return rows;
-    }
-
-    public void setRows(LinkedList<LinkedList<String>> rows) {
-        this.rows = rows;
     }
 
     public void addRow(LinkedList<String> row) {
