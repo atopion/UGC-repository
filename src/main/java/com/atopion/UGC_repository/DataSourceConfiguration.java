@@ -1,5 +1,8 @@
 package com.atopion.UGC_repository;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariConfigMXBean;
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -34,12 +37,34 @@ public class DataSourceConfiguration {
 
         System.out.println(config.toString());
 
-        return DataSourceBuilder.create()
+        /*DataSource tmp = DataSourceBuilder.create()
                 .url(config.getUrl())
                 .driverClassName(config.getDriverClassName())
                 .username(config.getUsername())
                 .password(config.getPassword())
                 .build();
+
+        if(tmp instanceof com.zaxxer.hikari.HikariDataSource) {
+            ((HikariDataSource) tmp).getHikariConfigMXBean().setValidationTimeout(300000);
+
+            HikariConfigMXBean conf = ((HikariDataSource) tmp).getHikariConfigMXBean();
+
+            System.out.println("Max Lifetime: " + conf.getMaxLifetime());
+            System.out.println("Poolname: " + conf.getPoolName());
+            System.out.println("Con timeout: " + conf.getConnectionTimeout());
+            System.out.println("Idle timeout: " + conf.getIdleTimeout());
+            System.out.println("Valid timeout: " + conf.getValidationTimeout());
+        }*/
+
+        HikariConfig hikariConfig = new HikariConfig();
+        hikariConfig.setJdbcUrl(config.url);
+        hikariConfig.setUsername(config.getUsername());
+        hikariConfig.setPassword(config.getPassword());
+        hikariConfig.setDriverClassName(config.driverClassName);
+        hikariConfig.setValidationTimeout(500);
+        hikariConfig.setMaxLifetime(30000);
+
+        return new HikariDataSource(hikariConfig);
     }
 
     @Configuration

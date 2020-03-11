@@ -12,7 +12,7 @@ services:
       - "ugc-rep-default"
 
   database:
-    image: mariadb:10.5.1-bionic
+    image: mariadb:10.4.12-bionic
     ports:
       - "3306:3306"
     container_name: database
@@ -21,8 +21,8 @@ services:
       - "ugc-rep-default"
     volumes:
       - "db-data:/var/lib/mysql:rw"
-      - "/c/code/java/UGC-rep/db/logs:/var/log/mysql:rw"
-      - "/c/code/java/UGC-rep/db/mariadb.cnf:/etc/my.cnf"
+      - "/c/code/java/UGC-repository/db/logs:/var/log/mysql:rw"
+      - "/c/code/java/UGC-repository/db/mariadb.cnf:/etc/my.cnf"
     environment:
       MYSQL_ROOT_PASSWORD: "1111"
 

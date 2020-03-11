@@ -23,8 +23,8 @@ read_rnd_buffer_size = 64M
 sort_buffer_size = 64M
 join_buffer_size = 64M
 
-thread_cache_size = 8
-thread_concurrency = 8
+thread_cache_size = 32
+thread_concurrency = 32
 thread_stack = 240K
 
 query_cache_size = 128M
@@ -41,6 +41,7 @@ long_query_time = 2
 
 server-id = 1
 
+log_warnings=4
 log_error = /var/log/mysql/mysql_error.log
 
 general_log_file = /var/log/mysql/mysql.log

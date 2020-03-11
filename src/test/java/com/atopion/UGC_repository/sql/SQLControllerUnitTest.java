@@ -136,7 +136,7 @@ class SQLControllerUnitTest {
                 ctrl.sqlRequestHTML("SELECT * FROM applications;", mockModel);
                 fail("Did not throw expected ResponseStatusException");
             } catch (ResponseStatusException ex) {
-                assertEquals(HttpStatus.FORBIDDEN, ex.getStatus());
+                assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
             }
 
             boolean test = false;
@@ -160,7 +160,7 @@ class SQLControllerUnitTest {
                 ctrl.sqlRequestHTML("SELECT * FROM applications;", mockModel);
                 fail("Did not throw expected ResponseStatusException");
             } catch (ResponseStatusException ex) {
-                assertEquals(HttpStatus.FORBIDDEN, ex.getStatus());
+                assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
             }
 
             boolean test = false;
@@ -209,7 +209,7 @@ class SQLControllerUnitTest {
                 ctrl.sqlRequestJSON("SELECT * FROM applications;");
                 fail("Did not throw expected ResponseStatusException");
             } catch (ResponseStatusException ex) {
-                assertEquals(HttpStatus.FORBIDDEN, ex.getStatus());
+                assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
             }
 
             boolean test = false;
@@ -235,7 +235,7 @@ class SQLControllerUnitTest {
                 ctrl.sqlRequestJSON("SELECT * FROM applications;");
                 fail("Did not throw expected ResponseStatusException");
             } catch (ResponseStatusException ex) {
-                assertEquals(HttpStatus.FORBIDDEN, ex.getStatus());
+                assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
             }
 
             boolean test = false;
@@ -285,7 +285,7 @@ class SQLControllerUnitTest {
                 ctrl.sqlRequestXML("SELECT * FROM applications;");
                 fail("Did not throw expected ResponseStatusException");
             } catch (ResponseStatusException ex) {
-                assertEquals(HttpStatus.FORBIDDEN, ex.getStatus());
+                assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
             }
 
             boolean test = false;
@@ -309,7 +309,7 @@ class SQLControllerUnitTest {
                 ctrl.sqlRequestXML("SELECT * FROM applications;");
                 fail("Did not throw expected ResponseStatusException");
             } catch (ResponseStatusException ex) {
-                assertEquals(HttpStatus.FORBIDDEN, ex.getStatus());
+                assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
             }
 
             boolean test = false;

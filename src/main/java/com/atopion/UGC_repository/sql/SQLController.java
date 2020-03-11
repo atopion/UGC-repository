@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -37,7 +38,7 @@ public class SQLController {
         SQLResponseObject queryResult = executeQuery(query);
 
         if(queryResult == null) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, query);
         }
 
         model.addAttribute("table_headers", queryResult.getHeaders());
@@ -52,7 +53,7 @@ public class SQLController {
         SQLResponseObject queryResult = executeQuery(query);
 
         if(queryResult == null) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, query);
         }
 
         return produceJSON(queryResult);
@@ -64,7 +65,7 @@ public class SQLController {
         SQLResponseObject queryResult = executeQuery(query);
 
         if(queryResult == null) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, query);
         }
 
         return produceXML(queryResult);
@@ -77,10 +78,10 @@ public class SQLController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Query cannot be empty.");
 
         // Securing the Query 1: Replacing the first word with SELECT (Limiting to SELECT Queries)
-        query = "SELECT" + query.substring(query.indexOf(' '));
+        query = "SELECT" + query.substring(query.indexOf(' ') == -1 ? query.length()-1 : query.indexOf(' '));
 
         // Securing the Query 2: Deleting everything after the first semicolon (Limiting to one query)
-        query = query.substring(0, query.indexOf(';'));
+        query = query.substring(0, query.indexOf(';') == -1 ? query.length()-1 : query.indexOf(';'));
 
         // Securing the Query 3: Turning SELECT INTO into SELECT
         if(query.toUpperCase().startsWith("SELECT INTO"))
@@ -105,8 +106,12 @@ public class SQLController {
                 result.addRow(tmp);
             }
 
-        } catch (SQLException ex) {
+        } catch (java.sql.SQLException ex) {
             logger.error("SQL Exception occurred: " + ex.getMessage());
+            logger.info("Query was: " + query);
+            result = null;
+        } catch (Exception ex) {
+            logger.error("Unknown exception occurred: " + ex.getMessage());
             logger.info("Query was: " + query);
             result = null;
         }

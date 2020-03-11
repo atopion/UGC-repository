@@ -21,32 +21,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class SQLControllerIntegrationTest implements ApplicationContextAware {
+class SQLControllerIntegrationTest {
 
     @Autowired
     private MockMvc mvc;
 
-    private ApplicationContext applicationContext;
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext)
-            throws BeansException {
-        this.applicationContext = applicationContext;
-    }
-
-    /*@AfterEach
-    void teardown() {
-        GenericApplicationContext genericApplicationContext = (GenericApplicationContext) applicationContext;
-        BeanDefinition bd = genericApplicationContext.getBeanDefinition("sqlDataSource");
-        System.out.println(bd);
-        genericApplicationContext.removeBeanDefinition("sqlDataSource");
-        genericApplicationContext.registerBeanDefinition("sqlDataSource", bd);
-    }*/
-
     @Test
-    @Order(0)
     void sqlRequestHTML_functionality_1() {
         try {
             MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/sql?query=SELECT * FROM applications;&format=html"))
@@ -72,7 +52,6 @@ class SQLControllerIntegrationTest implements ApplicationContextAware {
     }
 
     @Test
-    @Order(1)
     void sqlRequestHTML_functionality_2() {
         try {
             MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/sql?query=SELECT * FROM users;&format=html"))
@@ -98,7 +77,6 @@ class SQLControllerIntegrationTest implements ApplicationContextAware {
     }
 
     @Test
-    @Order(6)
     void sqlRequestHTML_robustness_1() {
         try {
             mvc.perform(MockMvcRequestBuilders.get("/sql?format=html"))
@@ -109,40 +87,36 @@ class SQLControllerIntegrationTest implements ApplicationContextAware {
     }
 
     @Test
-    @Order(9)
     void sqlRequestHTML_robustness_2() {
         try {
             mvc.perform(MockMvcRequestBuilders.get("/sql?query=DELETE FROM applications&format=html"))
-                    .andExpect(MockMvcResultMatchers.status().isForbidden());
+                    .andExpect(MockMvcResultMatchers.status().isBadRequest());
         } catch (Exception ex) {
             fail("Unexpected Exception occurred: " + ex.getMessage());
         }
     }
 
     @Test
-    @Order(10)
     void sqlRequestHTML_robustness_3() {
         try {
             mvc.perform(MockMvcRequestBuilders.get("/sql?query=SELECT * INTO demo FROM applications;&format=html"))
-                    .andExpect(MockMvcResultMatchers.status().isForbidden());
+                    .andExpect(MockMvcResultMatchers.status().isBadRequest());
         } catch (Exception ex) {
             fail("Unexpected Exception occurred: " + ex.getMessage());
         }
     }
 
     @Test
-    @Order(15)
     void sqlRequestHTML_robustness_4() {
         try {
             mvc.perform(MockMvcRequestBuilders.get("/sql?query=SELECT * FRAM applications;&format=html"))
-                    .andExpect(MockMvcResultMatchers.status().isForbidden());
+                    .andExpect(MockMvcResultMatchers.status().isBadRequest());
         } catch (Exception ex) {
             fail("Unexpected Exception occurred: " + ex.getMessage());
         }
     }
 
     @Test
-    @Order(2)
     void sqlRequestJSON_functionality_1() {
         try {
             MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/sql?query=SELECT * FROM applications;&format=json"))
@@ -165,7 +139,6 @@ class SQLControllerIntegrationTest implements ApplicationContextAware {
     }
 
     @Test
-    @Order(3)
     void sqlRequestJSON_functionality_2() {
         try {
             MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/sql?query=SELECT * FROM users;&format=json"))
@@ -188,7 +161,6 @@ class SQLControllerIntegrationTest implements ApplicationContextAware {
     }
 
     @Test
-    @Order(7)
     void sqlRequestJSON_robustness_1() {
         try {
             mvc.perform(MockMvcRequestBuilders.get("/sql?format=json"))
@@ -199,29 +171,26 @@ class SQLControllerIntegrationTest implements ApplicationContextAware {
     }
 
     @Test
-    @Order(11)
     void sqlRequestJSON_robustness_2() {
         try {
             mvc.perform(MockMvcRequestBuilders.get("/sql?query=DELETE FROM applications&format=json"))
-                    .andExpect(MockMvcResultMatchers.status().isForbidden());
+                    .andExpect(MockMvcResultMatchers.status().isBadRequest());
         } catch (Exception ex) {
             fail("Unexpected Exception occurred: " + ex.getMessage());
         }
     }
 
     @Test
-    @Order(12)
     void sqlRequestJSON_robustness_3() {
         try {
             mvc.perform(MockMvcRequestBuilders.get("/sql?query=SELECT * INTO demo FROM applications;&format=json"))
-                    .andExpect(MockMvcResultMatchers.status().isForbidden());
+                    .andExpect(MockMvcResultMatchers.status().isBadRequest());
         } catch (Exception ex) {
             fail("Unexpected Exception occurred: " + ex.getMessage());
         }
     }
 
     @Test
-    @Order(4)
     void sqlRequestXML_functionality_1() {
         try {
             MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/sql?query=SELECT * FROM applications;&format=xml"))
@@ -245,7 +214,6 @@ class SQLControllerIntegrationTest implements ApplicationContextAware {
     }
 
     @Test
-    @Order(5)
     void sqlRequestXML_functionality_2() {
         try {
             MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/sql?query=SELECT * FROM users;&format=xml"))
@@ -269,7 +237,6 @@ class SQLControllerIntegrationTest implements ApplicationContextAware {
     }
 
     @Test
-    @Order(8)
     void sqlRequestXML_robustness_1() {
         try {
             mvc.perform(MockMvcRequestBuilders.get("/sql?format=xml"))
@@ -280,22 +247,20 @@ class SQLControllerIntegrationTest implements ApplicationContextAware {
     }
 
     @Test
-    @Order(13)
     void sqlRequestXML_robustness_2() {
         try {
             mvc.perform(MockMvcRequestBuilders.get("/sql?query=DELETE FROM applications&format=xml"))
-                    .andExpect(MockMvcResultMatchers.status().isForbidden());
+                    .andExpect(MockMvcResultMatchers.status().isBadRequest());
         } catch (Exception ex) {
             fail("Unexpected Exception occurred: " + ex.getMessage());
         }
     }
 
     @Test
-    @Order(14)
     void sqlRequestXML_robustness_3() {
         try {
             mvc.perform(MockMvcRequestBuilders.get("/sql?query=SELECT * INTO demo FROM applications;&format=xml"))
-                    .andExpect(MockMvcResultMatchers.status().isForbidden());
+                    .andExpect(MockMvcResultMatchers.status().isBadRequest());
         } catch (Exception ex) {
             fail("Unexpected Exception occurred: " + ex.getMessage());
         }
