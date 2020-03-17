@@ -1,8 +1,15 @@
 package com.atopion.UGC_repository.rest;
 
+import com.atopion.UGC_repository.entities.ApplicationsEntity;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
 public class CSVSerializer {
 
@@ -19,6 +26,29 @@ public class CSVSerializer {
                 result.append(mask(set.getString(i))).append(i == metaData.getColumnCount() ? "": ',');
         }
 
+        return result.toString();
+    }
+
+    public static String serialize(List<ApplicationsEntity> entities, List<String> headers) {
+        StringBuilder result = new StringBuilder();
+
+        for(int i = 0; i < headers.size(); i++)
+            result.append(mask(headers.get(i))).append(i == headers.size() -1 ? "" : ",");
+
+        for(ApplicationsEntity entity : entities) {
+            result.append("\n");
+            Method[] methods = entity.getClass().getDeclaredMethods();
+            for (Method method : methods) {
+                if (method.getName().toLowerCase().startsWith("get") && method.getParameterCount() == 0) {
+                    try {
+                        result.append(mask(method.invoke(entity).toString())).append(",");
+                    } catch (IllegalAccessException | InvocationTargetException ignored) {
+                        System.out.println("CSVSerializer: Could not access method: " + method.getName());
+                    }
+                }
+            }
+            result.setLength(result.length() - 1);
+        }
         return result.toString();
     }
 

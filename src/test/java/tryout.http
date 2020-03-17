@@ -1,0 +1,56 @@
+
+POST http://localhost:8080/rest/applications
+Content-Type: application/x-www-form-urlencoded
+
+application_id=16&application_name=test5
+
+###
+
+POST http://localhost:8080/rest/applications
+Content-Type: application/json
+
+{
+  "application_id": 1,
+  "application_name": "test1"
+}
+
+###
+
+POST http://localhost:8080/rest/applications
+Content-Type: application/xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<application>
+    <application_name>demo6</application_name>
+    <application_id>8</application_id>
+</application>
+
+###
+
+POST http://localhost:8080/rest/applications
+Content-Type: text/plain
+
+application_id,application_name
+1,test18
+
+###
+
+GET http://localhost:8080/rest/applications?format=json
+Accept: application/json
+
+###
+
+HEAD http://localhost:8080/rest/applications?format=json
+Accept: application/json
+
+###
+
+OPTIONS http://localhost:8080/rest/applications
+Accept: application/json
+
+###
+
+TRACE http://localhost:8080/rest/applications
+Accept: application/json
+
+###

@@ -22,6 +22,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.apache.tomcat:tomcat-jdbc:9.0.10'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
     runtimeOnly 'mysql:mysql-connector-java'
 
     testImplementation('org.springframework.boot:spring-boot-starter-test') {

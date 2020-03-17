@@ -9,6 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import javax.sql.DataSource;
 import java.util.Objects;
@@ -16,11 +17,10 @@ import java.util.Objects;
 @Configuration
 public class DataSourceConfiguration {
 
+    @Primary
     @Bean
     @Autowired
     public DataSource restDataSource(@Qualifier("REST") RESTConfiguration config) {
-
-        System.out.println(config.toString());
 
         return DataSourceBuilder.create()
                 .url(config.getUrl())
@@ -35,34 +35,11 @@ public class DataSourceConfiguration {
     @Autowired
     public DataSource sqlDataSource(@Qualifier("SQL") SQLConfiguration config) {
 
-        System.out.println(config.toString());
-
-        /*DataSource tmp = DataSourceBuilder.create()
-                .url(config.getUrl())
-                .driverClassName(config.getDriverClassName())
-                .username(config.getUsername())
-                .password(config.getPassword())
-                .build();
-
-        if(tmp instanceof com.zaxxer.hikari.HikariDataSource) {
-            ((HikariDataSource) tmp).getHikariConfigMXBean().setValidationTimeout(300000);
-
-            HikariConfigMXBean conf = ((HikariDataSource) tmp).getHikariConfigMXBean();
-
-            System.out.println("Max Lifetime: " + conf.getMaxLifetime());
-            System.out.println("Poolname: " + conf.getPoolName());
-            System.out.println("Con timeout: " + conf.getConnectionTimeout());
-            System.out.println("Idle timeout: " + conf.getIdleTimeout());
-            System.out.println("Valid timeout: " + conf.getValidationTimeout());
-        }*/
-
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(config.url);
         hikariConfig.setUsername(config.getUsername());
         hikariConfig.setPassword(config.getPassword());
         hikariConfig.setDriverClassName(config.driverClassName);
-        hikariConfig.setValidationTimeout(500);
-        hikariConfig.setMaxLifetime(30000);
 
         return new HikariDataSource(hikariConfig);
     }

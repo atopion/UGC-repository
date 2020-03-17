@@ -2,15 +2,13 @@ package com.atopion.UGC_repository;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
-import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.accept.ContentNegotiationStrategy;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 @Configuration
@@ -19,12 +17,14 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
         configurer
-                .favorParameter(false)
-                .ignoreAcceptHeader(true)
+                .favorParameter(true)
                 .favorPathExtension(false)
-                .defaultContentTypeStrategy(new CustomContentNegotiationStrategy())
+                //.defaultContentTypeStrategy(new CustomContentNegotiationStrategy())
+                .mediaType("csv", MediaType.TEXT_PLAIN)
+                .mediaType("xml", MediaType.APPLICATION_XML)
                 .mediaType("html", MediaType.TEXT_HTML)
-                .mediaType("json", MediaType.APPLICATION_JSON);
+                .mediaType("json", MediaType.APPLICATION_JSON)
+                .mediaType("", MediaType.APPLICATION_FORM_URLENCODED);
     }
 
     public static class CustomContentNegotiationStrategy implements ContentNegotiationStrategy {
@@ -55,5 +55,11 @@ public class WebConfig implements WebMvcConfigurer {
                 }
             }
         }
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedMethods("GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS");
     }
 }

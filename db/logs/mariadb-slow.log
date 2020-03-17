@@ -7,3 +7,15 @@ Time		    Id Command	Argument
 mysqld, Version: 10.4.12-MariaDB-1:10.4.12+maria~bionic-log (mariadb.org binary distribution). started with:
 Tcp port: 3306  Unix socket: /var/run/mysqld/mysqld.sock
 Time		    Id Command	Argument
+mysqld, Version: 10.4.12-MariaDB-1:10.4.12+maria~bionic-log (mariadb.org binary distribution). started with:
+Tcp port: 3306  Unix socket: /var/run/mysqld/mysqld.sock
+Time		    Id Command	Argument
+mysqld, Version: 10.4.12-MariaDB-1:10.4.12+maria~bionic-log (mariadb.org binary distribution). started with:
+Tcp port: 3306  Unix socket: /var/run/mysqld/mysqld.sock
+Time		    Id Command	Argument
+mysqld, Version: 10.4.12-MariaDB-1:10.4.12+maria~bionic-log (mariadb.org binary distribution). started with:
+Tcp port: 0  Unix socket: /var/run/mysqld/mysqld.sock
+Time		    Id Command	Argument
+mysqld, Version: 10.4.12-MariaDB-1:10.4.12+maria~bionic-log (mariadb.org binary distribution). started with:
+Tcp port: 3306  Unix socket: /var/run/mysqld/mysqld.sock
+Time		    Id Command	Argument
