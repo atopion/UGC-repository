@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface ApplicationsRepository extends JpaRepository<ApplicationsEntity, Integer> {
 
-    @Query("select a from ApplicationsEntity a where a.application_name = ?1")
+    @Query("select a from ApplicationsEntity a where a.application_name like %?1%")
     public List<ApplicationsEntity> findByName(String name);
 }

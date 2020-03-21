@@ -1,8 +1,9 @@
 
 POST http://localhost:8080/rest/applications
 Content-Type: application/x-www-form-urlencoded
+Accept: application/x-www-form-urlencoded
 
-application_id=16&application_name=test5
+application_id=12&application_name=xform2
 
 ###
 
@@ -11,18 +12,19 @@ Content-Type: application/json
 
 {
   "application_id": 1,
-  "application_name": "test1"
+  "application_name": "json2"
 }
 
 ###
 
 POST http://localhost:8080/rest/applications
 Content-Type: application/xml
+Accept: application/xml
 
 <?xml version="1.0" encoding="UTF-8"?>
 <application>
-    <application_name>demo6</application_name>
-    <application_id>8</application_id>
+    <application_name>xml5</application_name>
+    <application_id>1</application_id>
 </application>
 
 ###
@@ -35,8 +37,32 @@ application_id,application_name
 
 ###
 
-GET http://localhost:8080/rest/applications?format=json
-Accept: application/json
+PATCH http://localhost:8080/rest/applications
+Content-Type: application/json
+
+{
+  "application_id": 1,
+  "application_name": "cuby"
+}
+
+###
+
+PUT http://localhost:8080/rest/applications/0
+Content-Type: application/json
+
+{
+  "application_id": 0,
+  "application_name": "cuby"
+}
+
+###
+
+DELETE http://localhost:8080/rest/applications/5
+
+###
+
+GET http://localhost:8080/rest/applications
+Accept: text/csv
 
 ###
 

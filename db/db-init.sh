@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mysql --user=root --password=1111 --host=172.19.0.1 --port=3306 --protocol=TCP <<MYSQL_SCRIPT
+mysql --user=root --password=1111 --host=localhost --port=3306 --protocol=TCP <<MYSQL_SCRIPT
 CREATE DATABASE IF NOT EXISTS ugc_rep_1;
 USE ugc_rep_1;
 CREATE TABLE IF NOT EXISTS applications (

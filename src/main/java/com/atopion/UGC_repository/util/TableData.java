@@ -28,7 +28,7 @@ public class TableData {
 
     private DataSource restDataSource;
 
-    private HashMap<String, ArrayList<ColumnData>> tables;
+    private Map<String, ArrayList<ColumnData>> tables;
 
     @Autowired
     public TableData(@Qualifier("restDataSource") DataSource restDataSource) {
@@ -36,7 +36,7 @@ public class TableData {
         tables = findAllTables();
 
         if(tables == null) {
-            tables = (HashMap<String, ArrayList<ColumnData>>) Map.ofEntries(
+            tables = Map.ofEntries(
                     entry("applications", new ArrayList<>(Arrays.asList(new ColumnData("", false, false, 0)))),
                     entry("users", new ArrayList<>(Arrays.asList(new ColumnData("", false, false, 0)))),
                     entry("administrators", new ArrayList<>(Arrays.asList(new ColumnData("", false, false, 0)))),
@@ -52,7 +52,7 @@ public class TableData {
         }
     }
 
-    public HashMap<String, ArrayList<ColumnData>> getTables() {
+    public Map<String, ArrayList<ColumnData>> getTables() {
         return tables;
     }
 
