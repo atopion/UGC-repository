@@ -44,6 +44,19 @@ public class DataSourceConfiguration {
         return new HikariDataSource(hikariConfig);
     }
 
+    @Bean
+    @Autowired
+    public DataSource userDataSource(@Qualifier("USER") USERConfiguration config) {
+
+        HikariConfig hikariConfig = new HikariConfig();
+        hikariConfig.setJdbcUrl(config.getUrl());
+        hikariConfig.setUsername(config.getUsername());
+        hikariConfig.setPassword(config.getPassword());
+        hikariConfig.setDriverClassName(config.getDriverClassName());
+
+        return new HikariDataSource(hikariConfig);
+    }
+
     @Configuration
     @ConfigurationProperties(prefix = "app.sql.datasource")
     @Qualifier("SQL")
@@ -137,7 +150,7 @@ public class DataSourceConfiguration {
 
         @Override
         public String toString() {
-            return "SQLConfiguration{ url='" + url +
+            return "RESTConfiguration{ url='" + url +
                     "', username='" + username +
                     "', password='" + password +
                     ", driverClassName=" + driverClassName +
@@ -150,6 +163,86 @@ public class DataSourceConfiguration {
             if (o == null) return false;
             if (!(o instanceof RESTConfiguration)) return false;
             RESTConfiguration that = (RESTConfiguration) o;
+            return maximumPoolSize == that.maximumPoolSize &&
+                    Objects.equals(url, that.url) &&
+                    Objects.equals(username, that.username) &&
+                    Objects.equals(password, that.password) &&
+                    Objects.equals(driverClassName, that.driverClassName);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(url, username, password, driverClassName, maximumPoolSize);
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+
+        public String getDriverClassName() {
+            return driverClassName;
+        }
+
+        public void setDriverClassName(String driverClassName) {
+            this.driverClassName = driverClassName;
+        }
+
+        public int getMaximumPoolSize() {
+            return maximumPoolSize;
+        }
+
+        public void setMaximumPoolSize(int maximumPoolSize) {
+            this.maximumPoolSize = maximumPoolSize;
+        }
+    }
+
+
+    @Configuration
+    @ConfigurationProperties(prefix = "app.user.datasource")
+    @Qualifier("USER")
+    public static class USERConfiguration {
+
+        private String url;
+        private String username;
+        private String password;
+        private String driverClassName;
+        private int maximumPoolSize;
+
+        @Override
+        public String toString() {
+            return "USERSConfiguration{ url='" + url +
+                    "', username='" + username +
+                    "', password='" + password +
+                    ", driverClassName=" + driverClassName +
+                    "'}";
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null) return false;
+            if (!(o instanceof USERConfiguration)) return false;
+            USERConfiguration that = (USERConfiguration) o;
             return maximumPoolSize == that.maximumPoolSize &&
                     Objects.equals(url, that.url) &&
                     Objects.equals(username, that.username) &&

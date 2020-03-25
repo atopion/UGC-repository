@@ -83,11 +83,26 @@ CREATE TABLE IF NOT EXISTS content_annotations (
 	FOREIGN KEY(user_token) REFERENCES users(user_token)
 );
 
+
+CREATE DATABASE IF NOT EXISTS users;
+USE users;
+
+CREATE TABLE IF NOT EXISTS users (
+  user_id      int NOT NULL AUTO_INCREMENT,
+  user_keyhash varchar(128) NOT NULL,
+  user_secret  varchar(128) NOT NULL,
+
+  PRIMARY KEY(user_id),
+  CONSTRAINT users_unique UNIQUE (user_keyhash, user_secret)
+);
+
 CREATE USER 'spring'@'%' identified by '2222';
 CREATE USER 'rest'@'%' identified by '3333';
+CREATE USER 'apps'@'%' identified by '4444';
 
 GRANT SELECT, UPDATE, INSERT, DELETE ON ugc_rep_1.* TO 'rest';
 GRANT SELECT ON ugc_rep_1.* TO 'spring';
+GRANT SELECT ON users.users TO 'apps';
 
 MYSQL_SCRIPT
 
