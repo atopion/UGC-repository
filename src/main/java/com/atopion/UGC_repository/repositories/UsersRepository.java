@@ -1,8 +1,12 @@
-package com.atopion.UGC_repository.entities;
+package com.atopion.UGC_repository.repositories;
+
+import com.atopion.UGC_repository.entities.UsersEntity;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+
 import java.util.List;
+import java.util.Date;
 
 public interface UsersRepository extends JpaRepository<UsersEntity, Integer> {
 

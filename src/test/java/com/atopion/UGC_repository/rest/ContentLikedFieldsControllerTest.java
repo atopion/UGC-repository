@@ -1,7 +1,7 @@
 package com.atopion.UGC_repository.rest;
 
-import com.atopion.UGC_repository.entities.ApplicationsEntity;
-import com.atopion.UGC_repository.repositories.ApplicationsRepository;
+import com.atopion.UGC_repository.entities.ContentLikedFieldsEntity;
+import com.atopion.UGC_repository.repositories.ContentLikedFieldsRepository;
 import com.atopion.UGC_repository.testutil.AccessTokens;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,34 +29,34 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource("classpath:application-integrationtests.properties")
-public class ApplicationsControllerTest {
+public class ContentLikedFieldsControllerTest {
 
-	private final String[] resultJSON  = new String[]{"{\"application_id\":1,\"application_name\":\"demo_name1\"}", "{\"application_id\":2,\"application_name\":\"demo_name2\"}", "{\"application_id\":3,\"application_name\":\"demo_name3\"}"};
-	private final String[] resultXML   = new String[]{"<application_id>1</application_id><application_name>demo_name1</application_name>", "<application_id>2</application_id><application_name>demo_name2</application_name>", "<application_id>3</application_id><application_name>demo_name3</application_name>"};
-	private final String[] resultCSV   = new String[]{"application_id,application_name", "1,demo_name1", "2,demo_name2", "3,demo_name3"};
-	private final String[] resultHTML  = new String[]{"<tr>\n<th>application_id</th>\n<th>application_name</th>\n</tr>", "<tr>\n<td>1</td>\n<td>demo_name1</td>\n</tr>", "<tr>\n<td>2</td>\n<td>demo_name2</td>\n</tr>", "<tr>\n<td>3</td>\n<td>demo_name3</td>\n</tr>"};
-	private final String[] resultXFORM = new String[]{"application_id=1&application_name=demo_name1", "application_id=2&application_name=demo_name2", "application_id=3&application_name=demo_name3"};
+	private final String[] resultJSON  = new String[]{"{\"field_id\":1,\"field_name\":\"demo_name1\",\"field_like_count\":1,\"record_id\":1}", "{\"field_id\":2,\"field_name\":\"demo_name2\",\"field_like_count\":2,\"record_id\":2}", "{\"field_id\":3,\"field_name\":\"demo_name3\",\"field_like_count\":3,\"record_id\":3}"};
+	private final String[] resultXML   = new String[]{"<field_id>1</field_id><field_name>demo_name1</field_name><field_like_count>1</field_like_count><record_id>1</record_id>", "<field_id>2</field_id><field_name>demo_name2</field_name><field_like_count>2</field_like_count><record_id>2</record_id>", "<field_id>3</field_id><field_name>demo_name3</field_name><field_like_count>3</field_like_count><record_id>3</record_id>"};
+	private final String[] resultCSV   = new String[]{"field_id,field_name,field_like_count,record_id", "1,demo_name1,1,1", "2,demo_name2,2,2", "3,demo_name3,3,3"};
+	private final String[] resultHTML  = new String[]{"<tr>\n<th>field_id</th>\n<th>field_name</th>\n<th>field_like_count</th>\n<th>record_id</th>\n</tr>", "<tr>\n<td>1</td>\n<td>demo_name1</td>\n<td>1</td>\n<td>1</td>\n</tr>", "<tr>\n<td>2</td>\n<td>demo_name2</td>\n<td>2</td>\n<td>2</td>\n</tr>", "<tr>\n<td>3</td>\n<td>demo_name3</td>\n<td>3</td>\n<td>3</td>\n</tr>"};
+	private final String[] resultXFORM = new String[]{"field_id=1&field_name=demo_name1&field_like_count=1&record_id=1", "field_id=2&field_name=demo_name2&field_like_count=2&record_id=2", "field_id=3&field_name=demo_name3&field_like_count=3&record_id=3"};
 
 	@Autowired
 	private MockMvc mvc;
 
 	@Autowired
-	private ApplicationsRepository repository;
+	private ContentLikedFieldsRepository repository;
 
 	@Autowired
 	private DataSource dataSource;
 
-	private ApplicationsEntity demo1, demo3;
+	private ContentLikedFieldsEntity demo1, demo3;
 
 	private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	@BeforeEach
 	void setUp() {
 		try {
-			demo1 = new ApplicationsEntity("demo_name1");
-			ApplicationsEntity demo2 = new ApplicationsEntity("demo_name2");
+			demo1 = new ContentLikedFieldsEntity("demo_name1", 1, 1);
+			ContentLikedFieldsEntity demo2 = new ContentLikedFieldsEntity("demo_name2", 2, 2);
 		
-			demo3 = new ApplicationsEntity(3, "demo_name3");
+			demo3 = new ContentLikedFieldsEntity(3, "demo_name3", 3, 3);
 
 			repository.save(demo1);
 			repository.save(demo2);
@@ -74,7 +74,7 @@ public class ApplicationsControllerTest {
 
 		try (Connection connection = dataSource.getConnection();
 			Statement statement = connection.createStatement()) {
-			statement.executeUpdate("ALTER TABLE applications ALTER COLUMN application_id RESTART WITH 1;");
+			statement.executeUpdate("ALTER TABLE content_liked_fields ALTER COLUMN field_id RESTART WITH 1;");
 
 		} catch (Exception e) {
 			fail("Unexpected exception occured: " + e.getMessage());
@@ -86,7 +86,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications?format=json"))).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields?format=json"))).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_JSON_VALUE));
@@ -104,7 +104,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications?format=xml"))).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields?format=xml"))).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_XML_VALUE));
@@ -122,7 +122,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications?format=csv"))).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields?format=csv"))).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString("text/csv"));
@@ -141,7 +141,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications?format=html"))).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields?format=html"))).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.TEXT_HTML_VALUE));
@@ -160,7 +160,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications?format=xlsx"))).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields?format=xlsx"))).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 
@@ -175,7 +175,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications")).accept(MediaType.APPLICATION_JSON)).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields")).accept(MediaType.APPLICATION_JSON)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_JSON_VALUE));
@@ -193,7 +193,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications")).accept(MediaType.APPLICATION_XML)).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields")).accept(MediaType.APPLICATION_XML)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_XML_VALUE));
@@ -211,7 +211,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications")).accept(MediaType.valueOf("text/csv"))).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields")).accept(MediaType.valueOf("text/csv"))).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString("text/csv"));
@@ -230,7 +230,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications")).accept(MediaType.TEXT_HTML)).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields")).accept(MediaType.TEXT_HTML)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.TEXT_HTML_VALUE));
@@ -249,7 +249,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications")).accept(MediaType.IMAGE_GIF)).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields")).accept(MediaType.IMAGE_GIF)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 
@@ -264,7 +264,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications/" + demo1.getApplication_id() + "?format=json"))).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields/" + demo1.getField_id() + "?format=json"))).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_JSON_VALUE));
@@ -281,7 +281,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications/" + demo1.getApplication_id() + "?format=xml"))).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields/" + demo1.getField_id() + "?format=xml"))).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_XML_VALUE));
@@ -298,7 +298,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications/" + demo1.getApplication_id() + "?format=csv"))).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields/" + demo1.getField_id() + "?format=csv"))).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString("text/csv"));
@@ -316,7 +316,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications/" + demo1.getApplication_id() + "?format=html"))).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields/" + demo1.getField_id() + "?format=html"))).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.TEXT_HTML_VALUE));
@@ -334,7 +334,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications/21" + "?format=xlsx"))).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields/21" + "?format=xlsx"))).andReturn();
 
 			assertEquals("Wrong status code. ", 404, result.getResponse().getStatus());
 
@@ -349,7 +349,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications/" + demo1.getApplication_id())).accept(MediaType.APPLICATION_JSON)).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields/" + demo1.getField_id())).accept(MediaType.APPLICATION_JSON)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_JSON_VALUE));
@@ -366,7 +366,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications/" + demo1.getApplication_id())).accept(MediaType.APPLICATION_XML)).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields/" + demo1.getField_id())).accept(MediaType.APPLICATION_XML)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_XML_VALUE));
@@ -383,7 +383,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications/" + demo1.getApplication_id())).accept(MediaType.valueOf("text/csv"))).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields/" + demo1.getField_id())).accept(MediaType.valueOf("text/csv"))).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString("text/csv"));
@@ -401,7 +401,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications/" + demo1.getApplication_id())).accept(MediaType.TEXT_HTML)).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields/" + demo1.getField_id())).accept(MediaType.TEXT_HTML)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.TEXT_HTML_VALUE));
@@ -419,7 +419,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications/21")).accept(MediaType.IMAGE_GIF)).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields/21")).accept(MediaType.IMAGE_GIF)).andReturn();
 
 			assertEquals("Wrong status code. ", 404, result.getResponse().getStatus());
 
@@ -434,7 +434,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications?name=" + demo1.getApplication_name() + "&format=json"))).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields?name=" + demo1.getField_name() + "&format=json"))).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_JSON_VALUE));
@@ -451,7 +451,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications?name=" + demo1.getApplication_name() + "&format=xml"))).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields?name=" + demo1.getField_name() + "&format=xml"))).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_XML_VALUE));
@@ -468,7 +468,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications?name=" + demo1.getApplication_name() + "&format=csv"))).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields?name=" + demo1.getField_name() + "&format=csv"))).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString("text/csv"));
@@ -486,7 +486,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications?name=" + demo1.getApplication_name() + "&format=html"))).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields?name=" + demo1.getField_name() + "&format=html"))).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.TEXT_HTML_VALUE));
@@ -504,7 +504,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications?name=xtc" + "&format=xlsx"))).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields?name=xtc" + "&format=xlsx"))).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 
@@ -519,7 +519,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications?name=" + demo1.getApplication_name())).accept(MediaType.APPLICATION_JSON)).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields?name=" + demo1.getField_name())).accept(MediaType.APPLICATION_JSON)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_JSON_VALUE));
@@ -536,7 +536,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications?name=" + demo1.getApplication_name())).accept(MediaType.APPLICATION_XML)).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields?name=" + demo1.getField_name())).accept(MediaType.APPLICATION_XML)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_XML_VALUE));
@@ -553,7 +553,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications?name=" + demo1.getApplication_name())).accept(MediaType.valueOf("text/csv"))).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields?name=" + demo1.getField_name())).accept(MediaType.valueOf("text/csv"))).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString("text/csv"));
@@ -571,7 +571,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications?name=" + demo1.getApplication_name())).accept(MediaType.TEXT_HTML)).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields?name=" + demo1.getField_name())).accept(MediaType.TEXT_HTML)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.TEXT_HTML_VALUE));
@@ -589,7 +589,7 @@ public class ApplicationsControllerTest {
 
 		try {
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/applications?name=xtc")).accept(MediaType.IMAGE_GIF)).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(get("/rest/contentLikedFields?name=xtc")).accept(MediaType.IMAGE_GIF)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 
@@ -606,7 +606,7 @@ public class ApplicationsControllerTest {
 
 			String content = "{" + resultJSON[2].substring(resultJSON[2].indexOf(",")+1);
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(post("/rest/applications")).contentType(MediaType.APPLICATION_JSON).content(content)).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(post("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_JSON).content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_JSON_VALUE));
@@ -625,7 +625,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(post("/rest/applications")).contentType(MediaType.APPLICATION_JSON).content("{\"application_id\":4}")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(post("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_JSON).content("{\"field_id\":4}")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -639,7 +639,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(post("/rest/applications")).contentType(MediaType.APPLICATION_JSON).content("")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(post("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_JSON).content("")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -655,7 +655,7 @@ public class ApplicationsControllerTest {
 
 			String content = "<entity>" + resultXML[2].substring(resultXML[2].indexOf(">", resultXML[2].indexOf(">")+1)+1) + "</entity>";
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(post("/rest/applications?format=xml")).contentType(MediaType.APPLICATION_XML).content(content)).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(post("/rest/contentLikedFields?format=xml")).contentType(MediaType.APPLICATION_XML).content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_XML_VALUE));
@@ -674,7 +674,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(post("/rest/applications")).contentType(MediaType.APPLICATION_XML).content("<entity><application_id>4</application_id></entity>")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(post("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_XML).content("<entity><field_id>4</field_id></entity>")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -688,7 +688,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(post("/rest/applications")).contentType(MediaType.APPLICATION_XML).content("")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(post("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_XML).content("")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -704,7 +704,7 @@ public class ApplicationsControllerTest {
 
 			String content = resultCSV[0].substring(resultCSV[0].indexOf(",")+1) + "\n" + resultCSV[3].substring(resultCSV[3].indexOf(",")+1);
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(post("/rest/applications")).contentType(MediaType.valueOf("text/csv")).content(content)).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(post("/rest/contentLikedFields")).contentType(MediaType.valueOf("text/csv")).content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_JSON_VALUE));
@@ -723,7 +723,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(post("/rest/applications")).contentType(MediaType.valueOf("text/csv")).content("application_id\n4")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(post("/rest/contentLikedFields")).contentType(MediaType.valueOf("text/csv")).content("field_id\n4")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -737,7 +737,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(post("/rest/applications")).contentType(MediaType.valueOf("text/csv")).content("")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(post("/rest/contentLikedFields")).contentType(MediaType.valueOf("text/csv")).content("")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -753,7 +753,7 @@ public class ApplicationsControllerTest {
 
 			String content = resultXFORM[2].substring(resultXFORM[2].indexOf("&")+1);
 			
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(post("/rest/applications")).contentType(MediaType.APPLICATION_FORM_URLENCODED).content(content)).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(post("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_FORM_URLENCODED).content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_JSON_VALUE));
@@ -772,7 +772,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(post("/rest/applications")).contentType(MediaType.APPLICATION_FORM_URLENCODED).content("application_id=4")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(post("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_FORM_URLENCODED).content("field_id=4")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -786,7 +786,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(post("/rest/applications")).contentType(MediaType.APPLICATION_FORM_URLENCODED).content("")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(post("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_FORM_URLENCODED).content("")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -802,7 +802,7 @@ public class ApplicationsControllerTest {
 
 			String content = resultJSON[2];
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications/")).contentType(MediaType.APPLICATION_JSON)
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields/")).contentType(MediaType.APPLICATION_JSON)
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 201, result.getResponse().getStatus());
@@ -821,7 +821,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications")).contentType(MediaType.APPLICATION_JSON).content("{\"application_id\":4}")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_JSON).content("{\"field_id\":4}")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -837,7 +837,7 @@ public class ApplicationsControllerTest {
 
 			String content = resultJSON[0];
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications/")).contentType(MediaType.APPLICATION_JSON)
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields/")).contentType(MediaType.APPLICATION_JSON)
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
@@ -856,7 +856,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications")).contentType(MediaType.APPLICATION_JSON).content("")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_JSON).content("")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -872,7 +872,7 @@ public class ApplicationsControllerTest {
 
 			String content = "<entity>" + resultXML[2] + "</entity>";
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications/?format=xml")).contentType(MediaType.APPLICATION_XML)
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields/?format=xml")).contentType(MediaType.APPLICATION_XML)
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 201, result.getResponse().getStatus());
@@ -891,7 +891,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications")).contentType(MediaType.APPLICATION_XML).content("<entity><application_id>4</application_id></entity>")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_XML).content("<entity><field_id>4</field_id></entity>")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -907,7 +907,7 @@ public class ApplicationsControllerTest {
 
 			String content = "<entity>" + resultXML[0] + "</entity>";
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications/?format=xml")).contentType(MediaType.APPLICATION_XML)
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields/?format=xml")).contentType(MediaType.APPLICATION_XML)
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
@@ -926,7 +926,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications")).contentType(MediaType.APPLICATION_XML).content("")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_XML).content("")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -942,7 +942,7 @@ public class ApplicationsControllerTest {
 
 			String content = resultCSV[0] + "\n" + resultCSV[3];
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications/")).contentType(MediaType.valueOf("text/csv"))
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields/")).contentType(MediaType.valueOf("text/csv"))
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 201, result.getResponse().getStatus());
@@ -961,7 +961,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications")).contentType(MediaType.valueOf("text/csv")).content("application_id\n4")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields")).contentType(MediaType.valueOf("text/csv")).content("field_id\n4")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -977,7 +977,7 @@ public class ApplicationsControllerTest {
 
 			String content = resultCSV[0] + "\n" + resultCSV[1];
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications/")).contentType(MediaType.valueOf("text/csv"))
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields/")).contentType(MediaType.valueOf("text/csv"))
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
@@ -996,7 +996,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications")).contentType(MediaType.valueOf("text/csv")).content("")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields")).contentType(MediaType.valueOf("text/csv")).content("")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -1012,7 +1012,7 @@ public class ApplicationsControllerTest {
 
 			String content = resultXFORM[2];
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications/")).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields/")).contentType(MediaType.APPLICATION_FORM_URLENCODED)
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 201, result.getResponse().getStatus());
@@ -1031,7 +1031,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications")).contentType(MediaType.APPLICATION_FORM_URLENCODED).content("application_id=4")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_FORM_URLENCODED).content("field_id=4")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -1047,7 +1047,7 @@ public class ApplicationsControllerTest {
 
 			String content = resultXFORM[0];
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications/")).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields/")).contentType(MediaType.APPLICATION_FORM_URLENCODED)
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
@@ -1066,7 +1066,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications")).contentType(MediaType.APPLICATION_FORM_URLENCODED).content("")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_FORM_URLENCODED).content("")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -1082,7 +1082,7 @@ public class ApplicationsControllerTest {
 
 			String content = "{" + resultJSON[2].substring(resultJSON[2].indexOf(",")+1);
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications/3")).contentType(MediaType.APPLICATION_JSON)
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields/3")).contentType(MediaType.APPLICATION_JSON)
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 201, result.getResponse().getStatus());
@@ -1101,7 +1101,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications")).contentType(MediaType.APPLICATION_JSON).content("{\"application_id\":4}")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_JSON).content("{\"field_id\":4}")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -1117,7 +1117,7 @@ public class ApplicationsControllerTest {
 
 			String content = "{" + resultJSON[0].substring(resultJSON[0].indexOf(",")+1);
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications/1")).contentType(MediaType.APPLICATION_JSON)
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields/1")).contentType(MediaType.APPLICATION_JSON)
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
@@ -1136,7 +1136,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications")).contentType(MediaType.APPLICATION_JSON).content("")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_JSON).content("")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -1152,7 +1152,7 @@ public class ApplicationsControllerTest {
 
 			String content = "<entity>" + resultXML[2].substring(resultXML[2].indexOf(">", resultXML[2].indexOf(">")+1)+1) + "</entity>";
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications/3?format=xml")).contentType(MediaType.APPLICATION_XML)
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields/3?format=xml")).contentType(MediaType.APPLICATION_XML)
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 201, result.getResponse().getStatus());
@@ -1171,7 +1171,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications")).contentType(MediaType.APPLICATION_XML).content("<entity><application_id>4</application_id></entity>")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_XML).content("<entity><field_id>4</field_id></entity>")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -1187,7 +1187,7 @@ public class ApplicationsControllerTest {
 
 			String content = "<entity>" + resultXML[0].substring(resultXML[0].indexOf(">", resultXML[0].indexOf(">")+1)+1) + "</entity>";
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications/1?format=xml")).contentType(MediaType.APPLICATION_XML)
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields/1?format=xml")).contentType(MediaType.APPLICATION_XML)
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
@@ -1206,7 +1206,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications")).contentType(MediaType.APPLICATION_XML).content("")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_XML).content("")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -1222,7 +1222,7 @@ public class ApplicationsControllerTest {
 
 			String content = resultCSV[0].substring(resultCSV[0].indexOf(",")+1) + "\n" + resultCSV[3].substring(resultCSV[3].indexOf(",")+1);
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications/3")).contentType(MediaType.valueOf("text/csv"))
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields/3")).contentType(MediaType.valueOf("text/csv"))
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 201, result.getResponse().getStatus());
@@ -1241,7 +1241,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications")).contentType(MediaType.valueOf("text/csv")).content("application_id\n4")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields")).contentType(MediaType.valueOf("text/csv")).content("field_id\n4")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -1257,7 +1257,7 @@ public class ApplicationsControllerTest {
 
 			String content = resultCSV[0].substring(resultCSV[0].indexOf(",")+1) + "\n" + resultCSV[1].substring(resultCSV[1].indexOf(",")+1);
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications/1")).contentType(MediaType.valueOf("text/csv"))
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields/1")).contentType(MediaType.valueOf("text/csv"))
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
@@ -1276,7 +1276,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications")).contentType(MediaType.valueOf("text/csv")).content("")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields")).contentType(MediaType.valueOf("text/csv")).content("")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -1292,7 +1292,7 @@ public class ApplicationsControllerTest {
 
 			String content = resultXFORM[2].substring(resultXFORM[2].indexOf("&")+1);
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications/3")).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields/3")).contentType(MediaType.APPLICATION_FORM_URLENCODED)
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 201, result.getResponse().getStatus());
@@ -1311,7 +1311,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications")).contentType(MediaType.APPLICATION_FORM_URLENCODED).content("application_id=4")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_FORM_URLENCODED).content("field_id=4")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -1327,7 +1327,7 @@ public class ApplicationsControllerTest {
 
 			String content = resultXFORM[0].substring(resultXFORM[0].indexOf("&")+1);
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications/1")).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields/1")).contentType(MediaType.APPLICATION_FORM_URLENCODED)
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
@@ -1346,7 +1346,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/applications")).contentType(MediaType.APPLICATION_FORM_URLENCODED).content("")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(put("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_FORM_URLENCODED).content("")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -1362,7 +1362,7 @@ public class ApplicationsControllerTest {
 
 			String content = resultJSON[0];
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications/")).contentType(MediaType.APPLICATION_JSON)
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields/")).contentType(MediaType.APPLICATION_JSON)
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
@@ -1382,7 +1382,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications")).contentType(MediaType.APPLICATION_JSON).content("{\"application_id\":4}")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_JSON).content("{\"field_id\":4}")).andReturn();
 
 			assertEquals("Wrong status code. ", 404, result.getResponse().getStatus());
 
@@ -1398,7 +1398,7 @@ public class ApplicationsControllerTest {
 
 			String content = resultJSON[2];
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications/")).contentType(MediaType.APPLICATION_JSON)
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields/")).contentType(MediaType.APPLICATION_JSON)
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 404, result.getResponse().getStatus());
@@ -1413,7 +1413,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications")).contentType(MediaType.APPLICATION_JSON).content("")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_JSON).content("")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -1429,7 +1429,7 @@ public class ApplicationsControllerTest {
 
 			String content = "<entity>" + resultXML[0] + "</entity>";
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications/?format=xml")).contentType(MediaType.APPLICATION_XML)
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields/?format=xml")).contentType(MediaType.APPLICATION_XML)
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
@@ -1449,7 +1449,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications")).contentType(MediaType.APPLICATION_XML).content("<entity><application_id>4</application_id></entity>")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_XML).content("<entity><field_id>4</field_id></entity>")).andReturn();
 
 			assertEquals("Wrong status code. ", 404, result.getResponse().getStatus());
 
@@ -1465,7 +1465,7 @@ public class ApplicationsControllerTest {
 
 			String content = "<entity>" + resultXML[2] + "</entity>";
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications/?format=xml")).contentType(MediaType.APPLICATION_XML)
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields/?format=xml")).contentType(MediaType.APPLICATION_XML)
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 404, result.getResponse().getStatus());
@@ -1480,7 +1480,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications")).contentType(MediaType.APPLICATION_XML).content("")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_XML).content("")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -1496,7 +1496,7 @@ public class ApplicationsControllerTest {
 
 			String content = resultCSV[0] + "\n" + resultCSV[1];
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications/")).contentType(MediaType.valueOf("text/csv"))
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields/")).contentType(MediaType.valueOf("text/csv"))
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
@@ -1516,7 +1516,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications")).contentType(MediaType.valueOf("text/csv")).content("application_id\n4")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields")).contentType(MediaType.valueOf("text/csv")).content("field_id\n4")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -1532,7 +1532,7 @@ public class ApplicationsControllerTest {
 
 			String content = resultCSV[0] + "\n" + resultCSV[3];
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications/")).contentType(MediaType.valueOf("text/csv"))
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields/")).contentType(MediaType.valueOf("text/csv"))
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 404, result.getResponse().getStatus());
@@ -1547,7 +1547,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications")).contentType(MediaType.valueOf("text/csv")).content("")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields")).contentType(MediaType.valueOf("text/csv")).content("")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -1563,7 +1563,7 @@ public class ApplicationsControllerTest {
 
 			String content = resultXFORM[0];
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications/")).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields/")).contentType(MediaType.APPLICATION_FORM_URLENCODED)
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
@@ -1583,7 +1583,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications")).contentType(MediaType.APPLICATION_FORM_URLENCODED).content("application_id=4")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_FORM_URLENCODED).content("field_id=4")).andReturn();
 
 			assertEquals("Wrong status code. ", 404, result.getResponse().getStatus());
 
@@ -1599,7 +1599,7 @@ public class ApplicationsControllerTest {
 
 			String content = resultXFORM[2];
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications/")).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields/")).contentType(MediaType.APPLICATION_FORM_URLENCODED)
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 404, result.getResponse().getStatus());
@@ -1614,7 +1614,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications")).contentType(MediaType.APPLICATION_FORM_URLENCODED).content("")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_FORM_URLENCODED).content("")).andReturn();
 
 			assertEquals("Wrong status code. ", 404, result.getResponse().getStatus());
 
@@ -1630,7 +1630,7 @@ public class ApplicationsControllerTest {
 
 			String content = "{" + resultJSON[0].substring(resultJSON[0].indexOf(",")+1);
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications/1")).contentType(MediaType.APPLICATION_JSON)
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields/1")).contentType(MediaType.APPLICATION_JSON)
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
@@ -1650,7 +1650,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications")).contentType(MediaType.APPLICATION_JSON).content("{\"application_id\":4}")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_JSON).content("{\"field_id\":4}")).andReturn();
 
 			assertEquals("Wrong status code. ", 404, result.getResponse().getStatus());
 
@@ -1666,7 +1666,7 @@ public class ApplicationsControllerTest {
 
 			String content = "{" + resultJSON[2].substring(resultJSON[2].indexOf(",")+1);
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications/3")).contentType(MediaType.APPLICATION_JSON)
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields/3")).contentType(MediaType.APPLICATION_JSON)
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 404, result.getResponse().getStatus());
@@ -1681,7 +1681,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications")).contentType(MediaType.APPLICATION_JSON).content("")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_JSON).content("")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -1697,7 +1697,7 @@ public class ApplicationsControllerTest {
 
 			String content = "<entity>" + resultXML[0].substring(resultXML[0].indexOf(">", resultXML[0].indexOf(">")+1)+1) + "</entity>";
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications/1?format=xml")).contentType(MediaType.APPLICATION_XML)
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields/1?format=xml")).contentType(MediaType.APPLICATION_XML)
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
@@ -1717,7 +1717,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications")).contentType(MediaType.APPLICATION_XML).content("<entity><application_id>4</application_id></entity>")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_XML).content("<entity><field_id>4</field_id></entity>")).andReturn();
 
 			assertEquals("Wrong status code. ", 404, result.getResponse().getStatus());
 
@@ -1733,7 +1733,7 @@ public class ApplicationsControllerTest {
 
 			String content = "<entity>" + resultXML[2].substring(resultXML[2].indexOf(">", resultXML[2].indexOf(">")+1)+1) + "</entity>";
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications/3?format=xml")).contentType(MediaType.APPLICATION_XML)
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields/3?format=xml")).contentType(MediaType.APPLICATION_XML)
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 404, result.getResponse().getStatus());
@@ -1748,7 +1748,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications")).contentType(MediaType.APPLICATION_XML).content("")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_XML).content("")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -1764,7 +1764,7 @@ public class ApplicationsControllerTest {
 
 			String content = resultCSV[0].substring(resultCSV[0].indexOf(",")+1) + "\n" + resultCSV[1].substring(resultCSV[1].indexOf(",")+1);
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications/1")).contentType(MediaType.valueOf("text/csv"))
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields/1")).contentType(MediaType.valueOf("text/csv"))
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
@@ -1784,7 +1784,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications")).contentType(MediaType.valueOf("text/csv")).content("application_id\n4")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields")).contentType(MediaType.valueOf("text/csv")).content("field_id\n4")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -1800,7 +1800,7 @@ public class ApplicationsControllerTest {
 
 			String content = resultCSV[0].substring(resultCSV[0].indexOf(",")+1) + "\n" + resultCSV[3].substring(resultCSV[3].indexOf(",")+1);
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications/3")).contentType(MediaType.valueOf("text/csv"))
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields/3")).contentType(MediaType.valueOf("text/csv"))
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 404, result.getResponse().getStatus());
@@ -1815,7 +1815,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications")).contentType(MediaType.valueOf("text/csv")).content("")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields")).contentType(MediaType.valueOf("text/csv")).content("")).andReturn();
 
 			assertEquals("Wrong status code. ", 400, result.getResponse().getStatus());
 
@@ -1831,7 +1831,7 @@ public class ApplicationsControllerTest {
 
 			String content = resultXFORM[0].substring(resultXFORM[0].indexOf("&")+1);
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications/1")).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields/1")).contentType(MediaType.APPLICATION_FORM_URLENCODED)
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
@@ -1851,7 +1851,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications")).contentType(MediaType.APPLICATION_FORM_URLENCODED).content("application_id=4")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_FORM_URLENCODED).content("field_id=4")).andReturn();
 
 			assertEquals("Wrong status code. ", 404, result.getResponse().getStatus());
 
@@ -1867,7 +1867,7 @@ public class ApplicationsControllerTest {
 
 			String content = resultXFORM[2].substring(resultXFORM[2].indexOf("&")+1);
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications/3")).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields/3")).contentType(MediaType.APPLICATION_FORM_URLENCODED)
 					.content(content)).andReturn();
 
 			assertEquals("Wrong status code. ", 404, result.getResponse().getStatus());
@@ -1882,7 +1882,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/applications")).contentType(MediaType.APPLICATION_FORM_URLENCODED).content("")).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(patch("/rest/contentLikedFields")).contentType(MediaType.APPLICATION_FORM_URLENCODED).content("")).andReturn();
 
 			assertEquals("Wrong status code. ", 404, result.getResponse().getStatus());
 
@@ -1896,7 +1896,7 @@ public class ApplicationsControllerTest {
 
 		try {
 
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(delete("/rest/applications/1"))).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(delete("/rest/contentLikedFields/1"))).andReturn();
 
 			assertEquals("Wrong status code. ", 204, result.getResponse().getStatus());
 			assertFalse("Content was not deleted. ", repository.existsById(1));
@@ -1911,7 +1911,7 @@ public class ApplicationsControllerTest {
 	void test_DELETE_JSON_format_robustness() {
 
 		try {
-			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(delete("/rest/applications/19"))).andReturn();
+			MvcResult result = mvc.perform(AccessTokens.withValidHeaders(delete("/rest/contentLikedFields/19"))).andReturn();
 
 			assertEquals("Wrong status code. ", 500, result.getResponse().getStatus());
 			assertTrue("Wrong content was deleted. ", repository.existsById(1));

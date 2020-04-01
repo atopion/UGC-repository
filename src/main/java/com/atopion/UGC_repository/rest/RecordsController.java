@@ -1,7 +1,7 @@
 package com.atopion.UGC_repository.rest;
 
-import com.atopion.UGC_repository.entities.ApplicationsEntity;
-import com.atopion.UGC_repository.repositories.ApplicationsRepository;
+import com.atopion.UGC_repository.entities.RecordsEntity;
+import com.atopion.UGC_repository.repositories.RecordsRepository;
 import com.atopion.UGC_repository.util.CSVSerializer;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -21,58 +21,58 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("/rest/applications")
-public class ApplicationsController {
+@RequestMapping("/rest/records")
+public class RecordsController {
 
-	private final List<String> table_headers = Arrays.asList("application_id", "application_name");
+	private final List<String> table_headers = Arrays.asList("record_id", "record_identifier");
 
-	private final ApplicationsRepository repository;
+	private final RecordsRepository repository;
 
-	ApplicationsController(ApplicationsRepository repository) {
+	RecordsController(RecordsRepository repository) {
 		this.repository = repository;
 	}
 
 // =============================================  GET REQUESTS  ========================================================
 
 	@GetMapping(path = "", produces = "application/json")
-	public @ResponseBody List<ApplicationsEntity> getAllJSON(@RequestParam(name = "name", required = false) String application_name) {
-		return repository.findByParams(null, application_name);
+	public @ResponseBody List<RecordsEntity> getAllJSON(@RequestParam(name = "identifier", required = false) String record_identifier) {
+		return repository.findByParams(null, record_identifier);
 	}
 
 	@GetMapping(path = "{id}", produces = "application/json")
-	public @ResponseBody ApplicationsEntity getAllJSONById(@PathVariable int id) {
+	public @ResponseBody RecordsEntity getAllJSONById(@PathVariable int id) {
 		return repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 	}
 
 	@GetMapping(path = "", produces = "application/xml")
-	public @ResponseBody List<ApplicationsEntity> getAllXML(@RequestParam(name = "name", required = false) String application_name) {
-		return repository.findByParams(null, application_name);
+	public @ResponseBody List<RecordsEntity> getAllXML(@RequestParam(name = "identifier", required = false) String record_identifier) {
+		return repository.findByParams(null, record_identifier);
 	}
 
 	@GetMapping(path = "{id}", produces = "application/xml")
-	public @ResponseBody ApplicationsEntity getAllXMLById(@PathVariable int id) {
+	public @ResponseBody RecordsEntity getAllXMLById(@PathVariable int id) {
 		return repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 	}
 
 	@GetMapping(path = "", produces = "text/csv")
-	public @ResponseBody String getAllCSV(@RequestParam(name = "name", required = false) String application_name) {
-		return CSVSerializer.serialize(repository.findByParams(null, application_name), table_headers);
+	public @ResponseBody String getAllCSV(@RequestParam(name = "identifier", required = false) String record_identifier) {
+		return CSVSerializer.serialize(repository.findByParams(null, record_identifier), table_headers);
 	}
 
 	@GetMapping(path = "{id}", produces = "text/csv")
 	public @ResponseBody String getAllCSVById(@PathVariable int id) {
-		ApplicationsEntity entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		RecordsEntity entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		return CSVSerializer.serialize(Collections.singletonList(entity), table_headers);
 	}
 
 	@GetMapping(path = "", produces = "text/html")
-	public String getAllHTML(@RequestParam(name = "name", required = false) String application_name, Model model) {
+	public String getAllHTML(@RequestParam(name = "identifier", required = false) String record_identifier, Model model) {
 
-		List<ApplicationsEntity> entities = repository.findByParams(null, application_name);
+		List<RecordsEntity> entities = repository.findByParams(null, record_identifier);
 
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		List<List<String>> rows = entities.stream()
-				.map(e -> List.of(Integer.toString(e.getApplication_id()), e.getApplication_name()))
+				.map(e -> List.of(Integer.toString(e.getRecord_id()), e.getRecord_identifier()))
 				.collect(Collectors.toList());
 
 		if(entities.size() == 0) {
@@ -90,9 +90,9 @@ public class ApplicationsController {
 
 	@GetMapping(path = "{id}", produces = "text/html")
 	public String getAllHTMLById(@PathVariable int id, Model model) {
-		ApplicationsEntity e = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		RecordsEntity e = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		List<List<String>> row = Collections.singletonList(List.of(Integer.toString(e.getApplication_id()), e.getApplication_name()));
+		List<List<String>> row = Collections.singletonList(List.of(Integer.toString(e.getRecord_id()), e.getRecord_identifier()));
 
 		model.addAttribute("table_headers", table_headers);
 		model.addAttribute("table_rows", row);
@@ -103,30 +103,30 @@ public class ApplicationsController {
 // ============================================  POST REQUESTS  ========================================================
 
 	@PostMapping(path = "", consumes = "application/json", produces = { "application/json", "application/xml" })
-	public @ResponseBody ApplicationsEntity postNewApplicationsJSON(@RequestBody ApplicationsEntity applicationsEntity) {
+	public @ResponseBody RecordsEntity postNewRecordsJSON(@RequestBody RecordsEntity recordsEntity) {
 		try {
-			return repository.save(new ApplicationsEntity(applicationsEntity.getApplication_name()));
+			return repository.save(new RecordsEntity(recordsEntity.getRecord_identifier()));
 		} catch (Exception ex) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@PostMapping(path = "", consumes = "application/xml", produces = { "application/json", "application/xml" })
-	public @ResponseBody ApplicationsEntity postNewApplicationsXML(@RequestBody ApplicationsEntity applicationsEntity) {
+	public @ResponseBody RecordsEntity postNewRecordsXML(@RequestBody RecordsEntity recordsEntity) {
 		try {
-			return repository.save(new ApplicationsEntity(applicationsEntity.getApplication_name()));
+			return repository.save(new RecordsEntity(recordsEntity.getRecord_identifier()));
 		} catch (Exception ex) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@PostMapping(path = "", consumes = "text/csv", produces = { "application/json", "application/xml" })
-	public @ResponseBody ApplicationsEntity postNewApplicationsCSV(@RequestBody String data) {
-		ApplicationsEntity applicationsEntity = readCSV(data);
+	public @ResponseBody RecordsEntity postNewRecordsCSV(@RequestBody String data) {
+		RecordsEntity recordsEntity = readCSV(data);
 
-		if(applicationsEntity != null) {
+		if(recordsEntity != null) {
 			try {
-				return repository.save(new ApplicationsEntity(applicationsEntity.getApplication_name()));
+				return repository.save(new RecordsEntity(recordsEntity.getRecord_identifier()));
 			} catch (Exception ex) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 			}
@@ -135,9 +135,9 @@ public class ApplicationsController {
 	}
 
 	@PostMapping(path = "", consumes = "application/x-www-form-urlencoded", produces = { "application/json", "application/xml" })
-	public @ResponseBody ApplicationsEntity postNewApplicationsXFORM(ApplicationsEntity applicationsEntity) {
+	public @ResponseBody RecordsEntity postNewRecordsXFORM(RecordsEntity recordsEntity) {
 		try {
-			return repository.save(new ApplicationsEntity(applicationsEntity.getApplication_name()));
+			return repository.save(new RecordsEntity(recordsEntity.getRecord_identifier()));
 		} catch (Exception ex) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
@@ -146,91 +146,91 @@ public class ApplicationsController {
 // =============================================  PUT REQUESTS  ========================================================
 
 	@PutMapping(path = "{id}", consumes = "application/json", produces = { "application/json", "application/xml" })
-	public ResponseEntity<ApplicationsEntity> putApplicationJSONById(@PathVariable int id, @RequestBody ApplicationsEntity param) {
+	public ResponseEntity<RecordsEntity> putRecordJSONById(@PathVariable int id, @RequestBody RecordsEntity param) {
 		try {
-			return putApplicationInternal(param, id);
+			return putRecordInternal(param, id);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@PutMapping(path = "", consumes = "application/json", produces = { "application/json", "application/xml" })
-	public ResponseEntity<ApplicationsEntity> putApplicationJSON(@RequestBody ApplicationsEntity param) {
+	public ResponseEntity<RecordsEntity> putRecordJSON(@RequestBody RecordsEntity param) {
 		try {
-			return putApplicationInternal(param, param.getApplication_id());
+			return putRecordInternal(param, param.getRecord_id());
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@PutMapping(path = "{id}", consumes = "application/xml", produces = { "application/json", "application/xml" })
-	public ResponseEntity<ApplicationsEntity> putApplicationXMLById(@PathVariable int id, @RequestBody ApplicationsEntity param) {
+	public ResponseEntity<RecordsEntity> putRecordXMLById(@PathVariable int id, @RequestBody RecordsEntity param) {
 		try {
-			return putApplicationInternal(param, id);
+			return putRecordInternal(param, id);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@PutMapping(path = "", consumes = "application/xml", produces = { "application/json", "application/xml" })
-	public ResponseEntity<ApplicationsEntity> putApplicationXML(@RequestBody ApplicationsEntity param) {
+	public ResponseEntity<RecordsEntity> putRecordXML(@RequestBody RecordsEntity param) {
 		try {
-			return putApplicationInternal(param, param.getApplication_id());
+			return putRecordInternal(param, param.getRecord_id());
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@PutMapping(path = "{id}", consumes = "text/csv", produces = { "application/json", "application/xml" })
-	public ResponseEntity<ApplicationsEntity> putApplicationCSVById(@PathVariable int id, @RequestBody String data) {
-		ApplicationsEntity param = readCSV(data);
+	public ResponseEntity<RecordsEntity> putRecordCSVById(@PathVariable int id, @RequestBody String data) {
+		RecordsEntity param = readCSV(data);
 		if(param == null)
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 
-		return putApplicationInternal(param, id);
+		return putRecordInternal(param, id);
 	}
 
 	@PutMapping(path = "", consumes = "text/csv", produces = { "application/json", "application/xml" })
-	public ResponseEntity<ApplicationsEntity> putApplicationCSV(@RequestBody String data) {
-		ApplicationsEntity param = readCSV(data);
+	public ResponseEntity<RecordsEntity> putRecordCSV(@RequestBody String data) {
+		RecordsEntity param = readCSV(data);
 		if(param == null)
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 
-		return putApplicationInternal(param, param.getApplication_id());
+		return putRecordInternal(param, param.getRecord_id());
 	}
 
 	@PutMapping(path = "{id}", consumes = "application/x-www-form-urlencoded", produces = { "application/json", "application/xml" })
-	public ResponseEntity<ApplicationsEntity> putApplicationXFORMById(@PathVariable int id, ApplicationsEntity param) {
+	public ResponseEntity<RecordsEntity> putRecordXFORMById(@PathVariable int id, RecordsEntity param) {
 		try {
-			return putApplicationInternal(param, id);
+			return putRecordInternal(param, id);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@PutMapping(path = "", consumes = "application/x-www-form-urlencoded", produces = { "application/json", "application/xml" })
-	public ResponseEntity<ApplicationsEntity> putApplicationXFORM(ApplicationsEntity param) {
+	public ResponseEntity<RecordsEntity> putRecordXFORM(RecordsEntity param) {
 		try {
-			return putApplicationInternal(param, param.getApplication_id());
+			return putRecordInternal(param, param.getRecord_id());
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 	}
 
 
-	private ResponseEntity<ApplicationsEntity> putApplicationInternal(ApplicationsEntity param, int id) {
-		Optional<ApplicationsEntity> opt = repository.findById(id);
+	private ResponseEntity<RecordsEntity> putRecordInternal(RecordsEntity param, int id) {
+		Optional<RecordsEntity> opt = repository.findById(id);
 		if(opt.isPresent()) {
-			ApplicationsEntity entity = opt.get();
-			entity.setApplication_name(param.getApplication_name());
+			RecordsEntity entity = opt.get();
+			entity.setRecord_identifier(param.getRecord_identifier());
 			repository.save(entity);
 			return new ResponseEntity<>(entity, HttpStatus.OK);
 		} else {
-			ApplicationsEntity entity;
+			RecordsEntity entity;
 			if(id != 0)
-				entity = new ApplicationsEntity(id, param.getApplication_name());
+				entity = new RecordsEntity(id, param.getRecord_identifier());
 			else
-				entity = new ApplicationsEntity(param.getApplication_name());
+				entity = new RecordsEntity(param.getRecord_identifier());
 			repository.save(entity);
 			return new ResponseEntity<>(entity, HttpStatus.CREATED);
 		}
@@ -238,9 +238,9 @@ public class ApplicationsController {
 // ============================================= PATCH REQUESTS ========================================================
 
 	@PatchMapping(path = "{id}", consumes = "application/json", produces = { "application/json", "application/xml" })
-	public ResponseEntity<ApplicationsEntity> patchApplicationJSONById(@PathVariable int id, @RequestBody ApplicationsEntity param) {
+	public ResponseEntity<RecordsEntity> patchRecordJSONById(@PathVariable int id, @RequestBody RecordsEntity param) {
 		try {
-			return patchApplicationInternal(param, id);
+			return patchRecordInternal(param, id);
 		} catch (ResponseStatusException e) {
 			throw e;
 		} catch (Exception e) {
@@ -249,9 +249,9 @@ public class ApplicationsController {
 	}
 
 	@PatchMapping(path = "", consumes = "application/json", produces = { "application/json", "application/xml" })
-	public ResponseEntity<ApplicationsEntity> patchApplicationJSON(@RequestBody ApplicationsEntity param) {
+	public ResponseEntity<RecordsEntity> patchRecordJSON(@RequestBody RecordsEntity param) {
 		try {
-			return patchApplicationInternal(param, param.getApplication_id());
+			return patchRecordInternal(param, param.getRecord_id());
 		} catch (ResponseStatusException e) {
 			throw e;
 		} catch (Exception e) {
@@ -260,9 +260,9 @@ public class ApplicationsController {
 	}
 
 	@PatchMapping(path = "{id}", consumes = "application/xml", produces = { "application/json", "application/xml" })
-	public ResponseEntity<ApplicationsEntity> patchApplicationXMLById(@PathVariable int id, @RequestBody ApplicationsEntity param) {
+	public ResponseEntity<RecordsEntity> patchRecordXMLById(@PathVariable int id, @RequestBody RecordsEntity param) {
 		try {
-			return patchApplicationInternal(param, id);
+			return patchRecordInternal(param, id);
 		} catch (ResponseStatusException e) {
 			throw e;
 		} catch (Exception e) {
@@ -271,9 +271,9 @@ public class ApplicationsController {
 	}
 
 	@PatchMapping(path = "", consumes = "application/xml", produces = { "application/json", "application/xml" })
-	public ResponseEntity<ApplicationsEntity> patchApplicationXML(@RequestBody ApplicationsEntity param) {
+	public ResponseEntity<RecordsEntity> patchRecordXML(@RequestBody RecordsEntity param) {
 		try {
-			return patchApplicationInternal(param, param.getApplication_id());
+			return patchRecordInternal(param, param.getRecord_id());
 		} catch (ResponseStatusException e) {
 			throw e;
 		} catch (Exception e) {
@@ -282,27 +282,27 @@ public class ApplicationsController {
 	}
 
 	@PatchMapping(path = "{id}", consumes = "text/csv", produces = { "application/json", "application/xml" })
-	public ResponseEntity<ApplicationsEntity> patchApplicationCSVById(@PathVariable int id, @RequestBody String data) {
-		ApplicationsEntity param = readCSV(data);
+	public ResponseEntity<RecordsEntity> patchRecordCSVById(@PathVariable int id, @RequestBody String data) {
+		RecordsEntity param = readCSV(data);
 		if(param == null)
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 
-		return patchApplicationInternal(param, id);
+		return patchRecordInternal(param, id);
 	}
 
 	@PatchMapping(path = "", consumes = "text/csv", produces = { "application/json", "application/xml" })
-	public ResponseEntity<ApplicationsEntity> patchApplicationCSV(@RequestBody String data) {
-		ApplicationsEntity param = readCSV(data);
+	public ResponseEntity<RecordsEntity> patchRecordCSV(@RequestBody String data) {
+		RecordsEntity param = readCSV(data);
 		if(param == null)
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 
-		return patchApplicationInternal(param, param.getApplication_id());
+		return patchRecordInternal(param, param.getRecord_id());
 	}
 
 	@PatchMapping(path = "{id}", consumes = "application/x-www-form-urlencoded", produces = { "application/json", "application/xml" })
-	public ResponseEntity<ApplicationsEntity> patchApplicationXFORMById(@PathVariable int id, ApplicationsEntity param) {
+	public ResponseEntity<RecordsEntity> patchRecordXFORMById(@PathVariable int id, RecordsEntity param) {
 		try {
-			return patchApplicationInternal(param, id);
+			return patchRecordInternal(param, id);
 		} catch (ResponseStatusException e) {
 			throw e;
 		} catch (Exception e) {
@@ -311,9 +311,9 @@ public class ApplicationsController {
 	}
 
 	@PatchMapping(path = "", consumes = "application/x-www-form-urlencoded", produces = { "application/json", "application/xml" })
-	public ResponseEntity<ApplicationsEntity> patchApplicationXFORM(ApplicationsEntity param) {
+	public ResponseEntity<RecordsEntity> patchRecordXFORM(RecordsEntity param) {
 		try {
-			return patchApplicationInternal(param, param.getApplication_id());
+			return patchRecordInternal(param, param.getRecord_id());
 		} catch (ResponseStatusException e) {
 			throw e;
 		} catch (Exception e) {
@@ -322,12 +322,12 @@ public class ApplicationsController {
 	}
 
 
-	private ResponseEntity<ApplicationsEntity> patchApplicationInternal(ApplicationsEntity param, int id) {
-		ApplicationsEntity entity = repository.findById(id)
+	private ResponseEntity<RecordsEntity> patchRecordInternal(RecordsEntity param, int id) {
+		RecordsEntity entity = repository.findById(id)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-		if(param.getApplication_name() != null)
-			entity.setApplication_name(param.getApplication_name());
+		if(param.getRecord_identifier() != null)
+			entity.setRecord_identifier(param.getRecord_identifier());
 
 		repository.save(entity);
 		return new ResponseEntity<>(entity, HttpStatus.OK);
@@ -348,33 +348,33 @@ public class ApplicationsController {
 
 // ================================================ Helpers ============================================================
 
-	private ApplicationsEntity readCSV(String csv) {
+	private RecordsEntity readCSV(String csv) {
 		String[] lines = csv.split("\n");
-		int application_id = -1;
-		String application_name = null;
+		int record_id = -1;
+		String record_identifier = null;
 
 
 		String[] headers = lines[0].split(",");
 		for(int i = 0; i < headers.length; i++) {
-			if(headers[i].equals("application_id"))
+			if(headers[i].equals("record_id"))
 				try {
-					application_id = Integer.parseInt(lines[1].split(",")[i]);
+					record_id = Integer.parseInt(lines[1].split(",")[i]);
 				} catch (Exception e) {
-					application_id = -1;
+					record_id = -1;
 				}
-			else if(headers[i].equals("application_name"))
+			else if(headers[i].equals("record_identifier"))
 				try {
-					application_name = lines[1].split(",")[i];
+					record_identifier = lines[1].split(",")[i];
 				} catch (Exception e) {
-					application_name = null;
+					record_identifier = null;
 				}
 		}
 
-		if(application_name == null)
+		if(record_identifier == null)
 			return null;
-		else if(application_id == -1)
-			return new ApplicationsEntity(application_name);
+		else if(record_id == -1)
+			return new RecordsEntity(record_identifier);
 		else
-			return new ApplicationsEntity(application_id, application_name);
+			return new RecordsEntity(record_id, record_identifier);
 	}
 }

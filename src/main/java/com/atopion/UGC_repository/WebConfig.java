@@ -1,6 +1,8 @@
 package com.atopion.UGC_repository;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.Formatter;
 import org.springframework.http.MediaType;
 import org.springframework.web.accept.ContentNegotiationStrategy;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -9,8 +11,12 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -123,5 +129,21 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("*")
                 .allowedMethods("GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS");
+    }
+
+
+    @Bean
+    public Formatter<Date> dateFormatter() {
+        return new Formatter<>() {
+            @Override
+            public Date parse(String text, Locale locale) throws ParseException {
+                return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(text);
+            }
+
+            @Override
+            public String print(Date object, Locale locale) {
+                return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(object);
+            }
+        };
     }
 }

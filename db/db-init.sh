@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS users (
 	CONSTRAINT users_unique UNIQUE (user_token, user_name, user_email)
 );
 CREATE TABLE IF NOT EXISTS records (
-  record_id varchar(50) NOT NULL,
+  record_id int NOT NULL AUTO_INCREMENT,
+  record_identifier varchar(50) NOT NULL,
   PRIMARY KEY(record_id)
 );
 CREATE TABLE IF NOT EXISTS content_comments (
@@ -26,7 +27,7 @@ CREATE TABLE IF NOT EXISTS content_comments (
 	comment_text varchar(3000) NOT NULL,
 	comment_created datetime NOT NULL,
 	application_id int NOT NULL,
-	record_id varchar(50) NOT NULL,
+	record_id int NOT NULL,
 	user_token varchar(150),
 	PRIMARY KEY(comment_id),
 	FOREIGN KEY(application_id) REFERENCES applications(application_id),
@@ -37,12 +38,12 @@ CREATE TABLE IF NOT EXISTS content_liked_fields (
 	field_id int NOT NULL AUTO_INCREMENT,
 	field_name varchar(200) NOT NULL,
 	field_like_count int NOT NULL,
-	record_id varchar(50) NOT NULL,
+	record_id int NOT NULL,
 	PRIMARY KEY(field_id),
 	FOREIGN KEY(record_id) REFERENCES records(record_id)
 );
 CREATE TABLE IF NOT EXISTS content_likes (
-	record_id varchar(50) NOT NULL,
+	record_id int NOT NULL,
 	cuby_like_level_1 int NOT NULL,
 	cuby_like_level_2 int NOT NULL,
 	cuby_like_level_3 int NOT NULL,
@@ -64,7 +65,7 @@ CREATE TABLE IF NOT EXISTS content_lists_records (
 	list_content_id int NOT NULL AUTO_INCREMENT,
 	entry_created datetime NOT NULL,
 	list_id int NOT NULL,
-	record_id varchar(50) NOT NULL,
+	record_id int NOT NULL,
 	PRIMARY KEY(list_content_id),
 	FOREIGN KEY(list_id) REFERENCES content_lists(list_id),
 	FOREIGN KEY(record_id) REFERENCES records(record_id)
@@ -76,7 +77,7 @@ CREATE TABLE IF NOT EXISTS content_annotations (
 	annotation_canvas int,
 	annotation_created datetime NOT NULL,
 	application_id int NOT NULL,
-	record_id varchar(50) NOT NULL,
+	record_id int NOT NULL,
 	user_token varchar(150) NOT NULL,
 	PRIMARY KEY(annotation_id),
 	FOREIGN KEY(application_id) REFERENCES applications(application_id),

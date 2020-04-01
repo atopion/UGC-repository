@@ -1,8 +1,9 @@
 package com.atopion.UGC_repository.rest;
 
 import com.atopion.UGC_repository.entities.UsersEntity;
-import com.atopion.UGC_repository.entities.UsersRepository;
+import com.atopion.UGC_repository.repositories.UsersRepository;
 import com.atopion.UGC_repository.util.CSVSerializer;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.text.SimpleDateFormat;
+
+import java.util.Date;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -66,6 +70,7 @@ public class UsersController {
 
 		List<UsersEntity> entities = repository.findByParams(null, user_token, user_name, user_email);
 
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		List<List<String>> rows = entities.stream()
 				.map(e -> List.of(Integer.toString(e.getUser_id()), e.getUser_token(), e.getUser_name(), e.getUser_email()))
 				.collect(Collectors.toList());
@@ -86,6 +91,7 @@ public class UsersController {
 	@GetMapping(path = "{id}", produces = "text/html")
 	public String getAllHTMLById(@PathVariable int id, Model model) {
 		UsersEntity e = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		List<List<String>> row = Collections.singletonList(List.of(Integer.toString(e.getUser_id()), e.getUser_token(), e.getUser_name(), e.getUser_email()));
 
 		model.addAttribute("table_headers", table_headers);

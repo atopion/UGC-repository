@@ -5,6 +5,8 @@ import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class CSVSerializer {
@@ -34,12 +36,20 @@ public class CSVSerializer {
         for(Object entity : entities) {
             result.append("\n");
             Method[] methods = entity.getClass().getDeclaredMethods();
-            for (Method method : methods) {
-                if (method.getName().toLowerCase().startsWith("get") && method.getParameterCount() == 0) {
-                    try {
-                        result.append(mask(method.invoke(entity).toString())).append(",");
-                    } catch (IllegalAccessException | InvocationTargetException ignored) {
-                        System.out.println("CSVSerializer: Could not access method: " + method.getName());
+            for (String head : headers) {
+                for (Method method : methods) {
+                    if (method.getName().toLowerCase().startsWith("get") && method.getParameterCount() == 0 &&
+                        method.getName().toLowerCase().replace("_", "").equals("get" + head.toLowerCase().replace("_", ""))) {
+                        try {
+                            if(method.getReturnType().equals(Date.class)) {
+                                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                result.append(mask(format.format(method.invoke(entity)))).append(",");
+                            } else {
+                                result.append(mask(method.invoke(entity).toString())).append(",");
+                            }
+                        } catch (IllegalAccessException | InvocationTargetException ignored) {
+                            System.out.println("CSVSerializer: Could not access method: " + method.getName());
+                        }
                     }
                 }
             }

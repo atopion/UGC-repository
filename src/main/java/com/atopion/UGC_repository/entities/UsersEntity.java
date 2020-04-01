@@ -1,8 +1,13 @@
 package com.atopion.UGC_repository.entities;
-    
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+ 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+
 import java.util.Objects;
+import java.util.Date;
+import java.text.SimpleDateFormat;
     
 @Entity
 @Table(name = "users")
