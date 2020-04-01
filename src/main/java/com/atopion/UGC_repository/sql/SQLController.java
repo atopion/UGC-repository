@@ -83,10 +83,6 @@ public class SQLController {
         // Securing the Query 2: Deleting everything after the first semicolon (Limiting to one query)
         query = query.substring(0, query.indexOf(';') == -1 ? query.length()-1 : query.indexOf(';'));
 
-        // Securing the Query 3: Turning SELECT INTO into SELECT
-        if(query.toUpperCase().startsWith("SELECT INTO"))
-            query = "SELECT" + query.substring(11);
-
         SQLResponseObject result = new SQLResponseObject();
 
 
@@ -106,12 +102,8 @@ public class SQLController {
                 result.addRow(tmp);
             }
 
-        } catch (java.sql.SQLException ex) {
-            logger.error("SQL Exception occurred: " + ex.getMessage());
-            logger.info("Query was: " + query);
-            result = null;
         } catch (Exception ex) {
-            logger.error("Unknown exception occurred: " + ex.getMessage());
+            logger.error("Exception occurred: " + ex.getMessage());
             logger.info("Query was: " + query);
             result = null;
         }

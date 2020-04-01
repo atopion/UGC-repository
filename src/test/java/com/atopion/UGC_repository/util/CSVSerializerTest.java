@@ -1,27 +1,25 @@
-package com.atopion.UGC_repository.rest;
+package com.atopion.UGC_repository.util;
 
 import com.atopion.UGC_repository.testutil.MockResultSet;
+import com.atopion.UGC_repository.util.CSVSerializer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
-class JSONSerializerTest {
+class CSVSerializerTest {
 
     private ResultSet testSet1;
-    private String testResult1 = "{\"table\":\"test1\",\"data\":[{\"Header 1\":\"Cell 1.1\",\"Header 2\":\"Cell 1.2\"},{\"Header 1\":\"Cell 2.1\",\"Header 2\":\"Cell 2.2\"}]}";
+    private String testResult1 = "Header 1,Header 2\nCell 1.1,Cell 1.2\nCell 2.1,Cell 2.2";
 
     private ResultSet testSet2;
-    private String testResult2 = "{\"table\":\"test2\",\"data\":[{\"Header 1\":\"Cell 1\",\"Header 2\":\"Cell 2\"}]}";
+    private String testResult2 = "Header 1,Header 2\nCell 1,Cell 2";
 
     private ResultSet testSet3;
-    private String testResult3 = "{\"table\":\"test3\",\"data\":[]}";
+    private String testResult3 = "";
 
     @BeforeEach
     void setUp() {
@@ -47,9 +45,9 @@ class JSONSerializerTest {
     }
 
     @Test
-    void serialize_test1() {
+    void serialize_test_1() {
         try {
-            String result = JSONSerializer.serialize(testSet1, "test1");
+            String result = CSVSerializer.serialize(testSet1);
             assertEquals(testResult1, result);
         } catch (SQLException ex) {
             fail("Unexpected Exception: " + ex.getMessage());
@@ -57,9 +55,9 @@ class JSONSerializerTest {
     }
 
     @Test
-    void serialize_test2() {
+    void serialize_test_2() {
         try {
-            String result = JSONSerializer.serialize(testSet2, "test2");
+            String result = CSVSerializer.serialize(testSet2);
             assertEquals(testResult2, result);
         } catch (SQLException ex) {
             fail("Unexpected Exception: " + ex.getMessage());
@@ -67,9 +65,9 @@ class JSONSerializerTest {
     }
 
     @Test
-    void serialize_test3() {
+    void serialize_test_3() {
         try {
-            String result = JSONSerializer.serialize(testSet3, "test3");
+            String result = CSVSerializer.serialize(testSet3);
             assertEquals(testResult3, result);
         } catch (SQLException ex) {
             fail("Unexpected Exception: " + ex.getMessage());

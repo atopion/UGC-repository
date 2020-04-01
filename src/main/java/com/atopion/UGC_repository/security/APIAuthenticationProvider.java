@@ -1,6 +1,5 @@
 package com.atopion.UGC_repository.security;
 
-import com.atopion.UGC_repository.sql.SQLController;
 import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,11 +14,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.security.task.DelegatingSecurityContextAsyncTaskExecutor;
-import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -29,7 +25,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 @Component
@@ -43,12 +42,12 @@ public class APIAuthenticationProvider implements AuthenticationProvider {
 
         @Override
         public Object getCredentials() {
-            return null;
+            return "PASS";
         }
 
         @Override
         public Object getPrincipal() {
-            return null;
+            return "REST-API";
         }
     }
 
@@ -92,10 +91,14 @@ public class APIAuthenticationProvider implements AuthenticationProvider {
     @SuppressWarnings("unchecked")
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         try {
-            System.out.println(authentication);
-            System.out.println(authentication.getDetails());
+            //System.out.println(authentication);
+            //System.out.println(authentication.getDetails());
 
             if(DISABLE_AUTH) {
+                System.err.println("WARNING: AUTHENTICATION DISABLED");
+                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                auth.setAuthenticated(true);
+                SecurityContextHolder.getContext().setAuthentication(auth);
                 List<GrantedAuthority> grantedAuthorityList = new ArrayList<>();
                 grantedAuthorityList.add(new SimpleGrantedAuthority("USER"));
                 return new UsernamePasswordAuthenticationToken("anonymous", "", grantedAuthorityList);
@@ -157,7 +160,6 @@ public class APIAuthenticationProvider implements AuthenticationProvider {
             return new UsernamePasswordAuthenticationToken(id, "", grantedAuthorityList);
 
         } catch (Exception e) {
-            e.printStackTrace();
             throw new BadCredentialsException("Authorization invalid");
         }
     }
@@ -169,7 +171,7 @@ public class APIAuthenticationProvider implements AuthenticationProvider {
 
     private Map<String, String> searchUserById(int id) {
 
-        String query = "SELECT user_keyhash, user_secret FROM users WHERE user_id = ?";
+        String query = "SELECT user_keyhash, user_secret FROM users.users WHERE user_id = ?";
         ResultSet set = null;
         Map<String, String> result = new HashMap<>();
 

@@ -9,16 +9,16 @@ import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CSVSerializerTest {
+class JSONSerializerTest {
 
     private ResultSet testSet1;
-    private String testResult1 = "Header 1,Header 2\nCell 1.1,Cell 1.2\nCell 2.1,Cell 2.2";
+    private String testResult1 = "{\"table\":\"test1\",\"data\":[{\"Header 1\":\"Cell 1.1\",\"Header 2\":\"Cell 1.2\"},{\"Header 1\":\"Cell 2.1\",\"Header 2\":\"Cell 2.2\"}]}";
 
     private ResultSet testSet2;
-    private String testResult2 = "Header 1,Header 2\nCell 1,Cell 2";
+    private String testResult2 = "{\"table\":\"test2\",\"data\":[{\"Header 1\":\"Cell 1\",\"Header 2\":\"Cell 2\"}]}";
 
     private ResultSet testSet3;
-    private String testResult3 = "";
+    private String testResult3 = "{\"table\":\"test3\",\"data\":[]}";
 
     @BeforeEach
     void setUp() {
@@ -44,9 +44,9 @@ class CSVSerializerTest {
     }
 
     @Test
-    void serialize_test_1() {
+    void serialize_test1() {
         try {
-            String result = CSVSerializer.serialize(testSet1);
+            String result = JSONSerializer.serialize(testSet1, "test1");
             assertEquals(testResult1, result);
         } catch (SQLException ex) {
             fail("Unexpected Exception: " + ex.getMessage());
@@ -54,9 +54,9 @@ class CSVSerializerTest {
     }
 
     @Test
-    void serialize_test_2() {
+    void serialize_test2() {
         try {
-            String result = CSVSerializer.serialize(testSet2);
+            String result = JSONSerializer.serialize(testSet2, "test2");
             assertEquals(testResult2, result);
         } catch (SQLException ex) {
             fail("Unexpected Exception: " + ex.getMessage());
@@ -64,9 +64,9 @@ class CSVSerializerTest {
     }
 
     @Test
-    void serialize_test_3() {
+    void serialize_test3() {
         try {
-            String result = CSVSerializer.serialize(testSet3);
+            String result = JSONSerializer.serialize(testSet3, "test3");
             assertEquals(testResult3, result);
         } catch (SQLException ex) {
             fail("Unexpected Exception: " + ex.getMessage());

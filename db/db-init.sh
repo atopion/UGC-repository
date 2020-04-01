@@ -10,11 +10,12 @@ CREATE TABLE IF NOT EXISTS applications (
 	CONSTRAINT applications_unique UNIQUE (application_name)
 );
 CREATE TABLE IF NOT EXISTS users (
+	user_id int NOT NULL AUTO_INCREMENT,
 	user_token varchar(150) NOT NULL,
 	user_name varchar(150),
 	user_email varchar(150),
-	PRIMARY KEY(user_token),
-	CONSTRAINT users_unique UNIQUE (user_name, user_email)
+	PRIMARY KEY(user_id),
+	CONSTRAINT users_unique UNIQUE (user_token, user_name, user_email)
 );
 CREATE TABLE IF NOT EXISTS records (
   record_id varchar(50) NOT NULL,

@@ -2,9 +2,7 @@ package com.atopion.UGC_repository.rest;
 
 import com.atopion.UGC_repository.entities.ApplicationsEntity;
 import com.atopion.UGC_repository.entities.ApplicationsRepository;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.atopion.UGC_repository.util.CSVSerializer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -285,6 +283,7 @@ public class ApplicationsController {
     @DeleteMapping(path = "{id}")
     public ResponseEntity<String> deleteById(@PathVariable int id) {
         try {
+            System.out.println("ID: " + id);
             repository.deleteById(id);
         } catch (Exception e) {
             return new ResponseEntity<>("", HttpStatus.INTERNAL_SERVER_ERROR);

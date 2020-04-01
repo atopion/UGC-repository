@@ -46,7 +46,10 @@ public class DataSourceConfiguration {
 
     @Bean
     @Autowired
+    @Qualifier("USERDB")
     public DataSource userDataSource(@Qualifier("USER") USERConfiguration config) {
+
+        System.out.println(config);
 
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(config.getUrl());
@@ -217,6 +220,7 @@ public class DataSourceConfiguration {
     }
 
 
+    //@Primary
     @Configuration
     @ConfigurationProperties(prefix = "app.user.datasource")
     @Qualifier("USER")

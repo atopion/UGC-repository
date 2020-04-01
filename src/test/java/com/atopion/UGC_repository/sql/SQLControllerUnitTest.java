@@ -141,7 +141,7 @@ class SQLControllerUnitTest {
 
             boolean test = false;
             for(ILoggingEvent event : listAppender.list)
-                if(event.getMessage().equals("SQL Exception occurred: Expected Exception"))
+                if(event.getMessage().equals("Exception occurred: Expected Exception"))
                     test = true;
 
             assertTrue(test, "Did not find expected exception in logger output");
@@ -165,7 +165,7 @@ class SQLControllerUnitTest {
 
             boolean test = false;
             for(ILoggingEvent event : listAppender.list)
-                if(event.getMessage().equals("SQL Exception occurred: Expected Exception"))
+                if(event.getMessage().equals("Exception occurred: Expected Exception"))
                     test = true;
 
             assertTrue(test, "Did not find expected exception in logger output");
@@ -215,7 +215,7 @@ class SQLControllerUnitTest {
             boolean test = false;
             for(ILoggingEvent event : listAppender.list) {
                 System.out.println(event.getMessage());
-                if (event.getMessage().equals("SQL Exception occurred: Expected Exception"))
+                if (event.getMessage().equals("Exception occurred: Expected Exception"))
                     test = true;
             }
 
@@ -240,7 +240,7 @@ class SQLControllerUnitTest {
 
             boolean test = false;
             for(ILoggingEvent event : listAppender.list)
-                if(event.getMessage().equals("SQL Exception occurred: Expected Exception"))
+                if(event.getMessage().equals("Exception occurred: Expected Exception"))
                     test = true;
 
             assertTrue(test, "Did not find expected exception in logger output");
@@ -290,7 +290,7 @@ class SQLControllerUnitTest {
 
             boolean test = false;
             for(ILoggingEvent event : listAppender.list)
-                if(event.getMessage().equals("SQL Exception occurred: Expected Exception"))
+                if(event.getMessage().equals("Exception occurred: Expected Exception"))
                     test = true;
 
             assertTrue(test, "Did not find expected exception in logger output");
@@ -314,7 +314,7 @@ class SQLControllerUnitTest {
 
             boolean test = false;
             for(ILoggingEvent event : listAppender.list)
-                if(event.getMessage().equals("SQL Exception occurred: Expected Exception"))
+                if(event.getMessage().equals("Exception occurred: Expected Exception"))
                     test = true;
 
             assertTrue(test, "Did not find expected exception in logger output");
