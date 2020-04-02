@@ -5,8 +5,7 @@ plugins {
 }
 
 group 'com.atopion'
-// TODO: Introduce variables for automatic build-number update.
-version '0.2-SNAPSHOT'
+version '0.3-SNAPSHOT'
 
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
@@ -35,10 +34,54 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
-build {
-
+task initializer {
     doFirst {
         updateBuildNr()
+    }
+}
+tasks.matching { it.name != 'initializer' }.all { Task task -> task.dependsOn initializer }
+
+task setupDockerFiles(type: Copy) {
+
+    from 'src/main/docker/'
+    include 'Dockerfile', 'docker-compose.yml'
+    into 'build/tmp/docker'
+    expand([
+            jarFile: "UGC-repository-${-> readVersion()}.jar",
+            PATH: '$PATH',
+            dbRootPW: "\"${-> readInitValues().get("ROOT_PW")}\""
+    ])
+}
+
+processResources {
+    filesMatching('*.properties') {
+        expand([
+                KeyStorePassword: "${-> readInitValues().get("KeyStorePassword")}",
+                SQLUsername: "${-> readInitValues().get("SQLUsername")}",
+                SQLPassword: "${-> readInitValues().get("SQLPassword")}",
+
+                RESTUsername: "${-> readInitValues().get("RESTUsername")}",
+                RESTPassword: "${-> readInitValues().get("RESTPassword")}",
+
+                USERUsername: "${-> readInitValues().get("USERUsername")}",
+                USERPassword: "${-> readInitValues().get("USERPassword")}"
+        ])
+    }
+}
+
+processTestResources {
+    filesMatching('*.properties') {
+        expand([
+                KeyStorePassword: "${-> readInitValues().get("KeyStorePassword")}",
+                SQLUsername: "${-> readInitValues().get("SQLUsername")}",
+                SQLPassword: "${-> readInitValues().get("SQLPassword")}",
+
+                RESTUsername: "${-> readInitValues().get("RESTUsername")}",
+                RESTPassword: "${-> readInitValues().get("RESTPassword")}",
+
+                USERUsername: "${-> readInitValues().get("USERUsername")}",
+                USERPassword: "${-> readInitValues().get("USERPassword")}"
+        ])
     }
 }
 
@@ -54,11 +97,15 @@ task run(type:Exec) {
 }
 
 task buildDocker(type:Exec) {
-    dependsOn 'build'
+    dependsOn 'setupDockerFiles', 'build'
+
+    doFirst {
+        System.out.println 'Build docker: ' + version
+    }
 
     def dockerfilesrc = System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows') ?
-            '.\\src\\main\\docker\\Dockerfile' :
-            './src/main/docker/Dockerfile'
+            '.\\build\\tmp\\docker\\Dockerfile' :
+            './build/tmp/docker/Dockerfile'
 
     commandLine 'docker', 'build', '-t', 'ugc-api:latest', '-t', 'ugc-api:' + version, '-f', dockerfilesrc, '.'
 }
@@ -66,17 +113,16 @@ task buildDocker(type:Exec) {
 task runDocker(type:Exec) {
     dependsOn 'buildDocker'
 
-    commandLine 'docker-compose', 'down'
-    commandLine 'docker-compose', 'up'
+    commandLine 'docker-compose', '-f', 'build/tmp/docker/docker-compose.yml', 'down'
+    commandLine 'docker-compose', '-f', 'build/tmp/docker/docker-compose.yml', 'up'
 }
-
 
 // Update build number
 def updateBuildNr() {
     def versionPropertiesFile = file('version.properties')
 
     if (versionPropertiesFile.canRead()) {
-        def Properties versionProperties = new Properties()
+        Properties versionProperties = new Properties()
 
         versionProperties.load(new FileInputStream(versionPropertiesFile))
 
@@ -90,4 +136,36 @@ def updateBuildNr() {
     else {
         throw new GradleException("Could not read version.properties!")
     }
+}
+
+def readInitValues() {
+    def secretsPropertiesFile = file('secrets.properties')
+
+    if (secretsPropertiesFile.canRead()) {
+        Properties secretsProperties = new Properties()
+
+        secretsProperties.load(new FileInputStream(secretsPropertiesFile))
+
+        def valueMap = new LinkedHashMap<String, String>()
+
+        valueMap.put("ROOT_PW", secretsProperties['ROOT_PW'].toString())
+        valueMap.put("KeyStorePassword", secretsProperties['KeyStorePassword'].toString())
+
+        valueMap.put("SQLUsername", secretsProperties['SQLUsername'].toString())
+        valueMap.put("SQLPassword", secretsProperties['SQLPassword'].toString())
+        valueMap.put("RESTUsername", secretsProperties['RESTUsername'].toString())
+        valueMap.put("RESTPassword", secretsProperties['RESTPassword'].toString())
+        valueMap.put("USERUsername", secretsProperties['USERUsername'].toString())
+        valueMap.put("USERPassword", secretsProperties['USERPassword'].toString())
+
+        return valueMap
+
+    } else {
+        throw new GradleException("Could not read version.properties!")
+    }
+}
+
+def readVersion() {
+    System.out.println 'Version: ' + version
+    return version
 }

@@ -5,11 +5,14 @@ services:
     image: ugc-api:latest
     ports:
       - "8080:8080"
+      - "8443:8443"
     depends_on:
       - 'database'
     container_name: api
     networks:
       - "ugc-rep-default"
+    volumes:
+      - "/home/atopi/IdeaProjects/UGC-repository/db/masterkey.txt:/data/masterkey.txt:ro"
 
   database:
     image: mariadb:10.4.12-bionic
@@ -21,10 +24,10 @@ services:
       - "ugc-rep-default"
     volumes:
       - "db-data:/var/lib/mysql:rw"
-      - "/c/code/java/UGC-repository/db/logs:/var/log/mysql:rw"
-      - "/c/code/java/UGC-repository/db/mariadb.cnf:/etc/my.cnf"
+      - "/home/atopi/IdeaProjects/UGC-repository/db/logs:/var/log/mysql:rw"
+      - "/home/atopi/IdeaProjects/UGC-repository/db/mariadb.cnf:/etc/my.cnf"
     environment:
-      MYSQL_ROOT_PASSWORD: "1111"
+      MYSQL_ROOT_PASSWORD: ${dbRootPW}
 
 networks:
   ugc-rep-default:

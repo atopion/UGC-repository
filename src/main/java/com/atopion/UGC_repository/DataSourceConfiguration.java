@@ -22,12 +22,21 @@ public class DataSourceConfiguration {
     @Autowired
     public DataSource restDataSource(@Qualifier("REST") RESTConfiguration config) {
 
-        return DataSourceBuilder.create()
-                .url(config.getUrl())
-                .driverClassName(config.getDriverClassName())
-                .username(config.getUsername())
-                .password(config.getPassword())
-                .build();
+        HikariConfig hikariConfig = new HikariConfig();
+        hikariConfig.setJdbcUrl(config.url);
+        hikariConfig.setUsername(config.getUsername());
+        hikariConfig.setPassword(config.getPassword());
+
+        hikariConfig.setMinimumIdle(5);
+        hikariConfig.setMaximumPoolSize(20);
+        hikariConfig.setIdleTimeout(30000);
+        hikariConfig.setPoolName("RestHikariCP");
+        hikariConfig.setMaxLifetime(2000000);
+        hikariConfig.setConnectionTimeout(30000);
+
+        hikariConfig.setInitializationFailTimeout(-1);
+
+        return new HikariDataSource(hikariConfig);
     }
 
 
@@ -35,11 +44,26 @@ public class DataSourceConfiguration {
     @Autowired
     public DataSource sqlDataSource(@Qualifier("SQL") SQLConfiguration config) {
 
-        HikariConfig hikariConfig = new HikariConfig();
+        /*HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(config.url);
         hikariConfig.setUsername(config.getUsername());
         hikariConfig.setPassword(config.getPassword());
         hikariConfig.setDriverClassName(config.driverClassName);
+        hikariConfig.setInitializationFailTimeout(-1);*/
+
+        HikariConfig hikariConfig = new HikariConfig();
+        hikariConfig.setJdbcUrl(config.url);
+        hikariConfig.setUsername(config.getUsername());
+        hikariConfig.setPassword(config.getPassword());
+
+        hikariConfig.setMinimumIdle(5);
+        hikariConfig.setMaximumPoolSize(20);
+        hikariConfig.setIdleTimeout(30000);
+        hikariConfig.setPoolName("SQLHikariCP");
+        hikariConfig.setMaxLifetime(2000000);
+        hikariConfig.setConnectionTimeout(30000);
+
+        hikariConfig.setInitializationFailTimeout(-1);
 
         return new HikariDataSource(hikariConfig);
     }
@@ -49,13 +73,28 @@ public class DataSourceConfiguration {
     @Qualifier("USERDB")
     public DataSource userDataSource(@Qualifier("USER") USERConfiguration config) {
 
-        System.out.println(config);
+        /*System.out.println(config);
 
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(config.getUrl());
         hikariConfig.setUsername(config.getUsername());
         hikariConfig.setPassword(config.getPassword());
         hikariConfig.setDriverClassName(config.getDriverClassName());
+        hikariConfig.setInitializationFailTimeout(-1);*/
+
+        HikariConfig hikariConfig = new HikariConfig();
+        hikariConfig.setJdbcUrl(config.url);
+        hikariConfig.setUsername(config.getUsername());
+        hikariConfig.setPassword(config.getPassword());
+
+        hikariConfig.setMinimumIdle(5);
+        hikariConfig.setMaximumPoolSize(20);
+        hikariConfig.setIdleTimeout(30000);
+        hikariConfig.setPoolName("USERHikariCP");
+        hikariConfig.setMaxLifetime(2000000);
+        hikariConfig.setConnectionTimeout(30000);
+
+        hikariConfig.setInitializationFailTimeout(-1);
 
         return new HikariDataSource(hikariConfig);
     }

@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Configuration
 @EnableWebSecurity
@@ -33,6 +34,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
+
+                .requiresChannel().anyRequest().requiresSecure()
+
+                .and()
                 .authorizeRequests()
                     // Allow statics
                     .antMatchers("/css/*", "/js/*", "/favicon.ico").permitAll()
@@ -58,7 +63,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public String masterKey() {
         try {
-            return Files.readAllLines(Path.of("/home/atopi/IdeaProjects/UGC-repository/db/masterkey.txt")).get(0);
+            if (Files.exists(Paths.get("/data/masterkey.txt"))) {
+                return Files.readAllLines(Paths.get("/data/masterkey.txt")).get(0);
+            } else {
+                return Files.readAllLines(Paths.get("/home/atopi/IdeaProjects/UGC-repository/db/masterkey.txt")).get(0);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return "";
