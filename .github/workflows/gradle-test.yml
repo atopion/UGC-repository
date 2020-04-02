@@ -24,7 +24,10 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    
+
+    - name: Build demo secrets file
+      run: echo "ROOT_PW=password\nKeyStorePassword=password\nSQLUsername=user\nSQLPassword=password\nRESTUsername=user\nRESTPassword=password\nUSERUsername=user\nUSERPassword=password\n" > secrets.properties
+
     # Test the code
     - name: Test with Gradle
       run: ./gradlew test --stacktrace

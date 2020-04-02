@@ -161,7 +161,7 @@ def readInitValues() {
         return valueMap
 
     } else {
-        throw new GradleException("Could not read version.properties!")
+        throw new GradleException("Could not read secrets.properties!")
     }
 }
 
