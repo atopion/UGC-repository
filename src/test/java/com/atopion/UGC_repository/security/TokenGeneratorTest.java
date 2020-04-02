@@ -104,6 +104,7 @@ class TokenGeneratorTest {
                 .header("X-Auth-Access-Id", "1")
                 .header("X-Auth-Access-Key", key)
                 .header("X-Auth-Access-Token", accessToken)
+                .secure(true)
         ).andReturn();
 
         assertEquals("Did not get status 200.", 200, result.getResponse().getStatus());
