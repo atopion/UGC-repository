@@ -27,4 +27,4 @@ jobs:
     
     # Test the code
     - name: Test with Gradle
-      run: ./gradlew test
+      run: ./gradlew test --stacktrace
