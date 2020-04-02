@@ -1,6 +1,5 @@
 secrets.properties
 /.gradle/
 /.idea/
-/gradle/
 /build/
 /old/
