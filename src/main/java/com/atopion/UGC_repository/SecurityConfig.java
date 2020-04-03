@@ -2,33 +2,25 @@ package com.atopion.UGC_repository;
 
 import com.atopion.UGC_repository.security.APIAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
     private APIAuthenticationProvider authProvider;
 
-    private APIAuthenticationProvider.HeaderExtractFilter filter = new APIAuthenticationProvider.HeaderExtractFilter();
+    private APIAuthenticationProvider.HeaderExtractFilter filter;
 
-    /*@Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authProvider);
-    }*/
+
+    public SecurityConfig(@Autowired APIAuthenticationProvider authProvider)  {
+        this.authProvider = authProvider;
+        this.filter = new APIAuthenticationProvider.HeaderExtractFilter();
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -57,20 +49,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);*/
-    }
-
-
-    @Bean
-    public String masterKey() {
-        try {
-            if (Files.exists(Paths.get("/data/masterkey.txt"))) {
-                return Files.readAllLines(Paths.get("/data/masterkey.txt")).get(0);
-            } else {
-                return Files.readAllLines(Paths.get("/home/atopi/IdeaProjects/UGC-repository/db/masterkey.txt")).get(0);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
-        }
     }
 }

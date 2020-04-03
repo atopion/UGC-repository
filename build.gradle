@@ -38,6 +38,7 @@ task initializer {
     doFirst {
         updateBuildNr()
     }
+    outputs.upToDateWhen {false}
 }
 tasks.matching { it.name != 'initializer' }.all { Task task -> task.dependsOn initializer }
 
@@ -51,6 +52,7 @@ task setupDockerFiles(type: Copy) {
             PATH: '$PATH',
             dbRootPW: "\"${-> readInitValues().get("ROOT_PW")}\""
     ])
+    outputs.upToDateWhen {false}
 }
 
 processResources {
