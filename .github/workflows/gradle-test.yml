@@ -32,8 +32,10 @@ jobs:
     - name: Test with Gradle
       run: ./gradlew test
 
-    - run: echo "::set-env name=TEST_SUCCESSFUL::true"
-      if: successful()
+    # Trigger build
+    - name: Trigger the rebuild
+      run: curl -XPOST 134.76.19.117:4499
+      if: success()
 
     # Archive the test results
     - name: Archiving the test results
@@ -42,8 +44,3 @@ jobs:
       with:
         name: test-report
         path: build/reports
-
-    # Trigger build
-    - name: Trigger the rebuild
-      run: curl -XPOST 134.76.19.117:4499
-      if: env.TEST_SUCCESSFUL == 'true'
