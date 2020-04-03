@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -52,6 +53,8 @@ public class ContentListsRecordsControllerTest {
 
 	@BeforeEach
 	void setUp() {
+		TimeZone.setDefault(TimeZone.getTimeZone("Europe/Berlin"));
+
 		try {
 			demo1 = new ContentListsRecordsEntity(format.parse("2001-01-01 00:00:00"), 1, 1);
 			ContentListsRecordsEntity demo2 = new ContentListsRecordsEntity(format.parse("2002-01-01 00:00:00"), 2, 2);

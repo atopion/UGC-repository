@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -52,6 +53,8 @@ public class UsersControllerTest {
 
 	@BeforeEach
 	void setUp() {
+		TimeZone.setDefault(TimeZone.getTimeZone("Europe/Berlin"));
+
 		try {
 			demo1 = new UsersEntity("demo_token1", "demo_name1", "demo_email1");
 			UsersEntity demo2 = new UsersEntity("demo_token2", "demo_name2", "demo_email2");
