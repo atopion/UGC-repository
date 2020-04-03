@@ -33,7 +33,7 @@ jobs:
       run: ./gradlew test
 
     # Access test results
-    - name: Download the test results
-      uses: actions/download-artifact@v1
+    - name: Archiving the test results
+      uses: actions/upload-artifact@v1
       with:
         name: build
