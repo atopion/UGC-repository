@@ -10,7 +10,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  test-and-build:
 
     runs-on: ubuntu-latest
 
@@ -32,10 +32,18 @@ jobs:
     - name: Test with Gradle
       run: ./gradlew test
 
-    # Access test results
+    - run: echo "::set-env name=TEST_SUCCESSFUL::true"
+      if: successful()
+
+    # Archive the test results
     - name: Archiving the test results
       uses: actions/upload-artifact@v1
       if: always()
       with:
         name: test-report
         path: build/reports
+
+    # Trigger build
+    - name: Trigger the rebuild
+      run: curl -XPOST 134.76.19.117:4499
+      if: env.TEST_SUCCESSFUL == 'true'
