@@ -43,6 +43,8 @@ public class WebConfig implements WebMvcConfigurer {
 
     /**
      * IMPORTANT: Does not care about quality values in headers, uses the first value that is known.
+     *
+     *
      */
 
     public static class CustomContentNegotiationStrategy implements ContentNegotiationStrategy {
