@@ -30,4 +30,10 @@ jobs:
 
     # Test the code
     - name: Test with Gradle
-      run: ./gradlew test --stacktrace
+      run: ./gradlew test
+
+    # Access test results
+    - name: Download the test results
+      uses: actions/download-artifact@v1
+      with:
+        name: build
