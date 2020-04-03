@@ -55,6 +55,20 @@ task setupDockerFiles(type: Copy) {
     outputs.upToDateWhen {false}
 }
 
+task setupDBFiles(type: Copy) {
+
+    from 'db/'
+    include 'db-clear.sh', 'db-demo-content.sh', 'db-init.sh'
+    into 'build/tmp/db'
+    expand([
+            dbRootPW: "${-> readInitValues().get("ROOT_PW")}",
+            SQLPassword: "${-> readInitValues().get("SQLPassword")}",
+            RESTPassword: "${-> readInitValues().get("RESTPassword")}",
+            USERPassword: "${-> readInitValues().get("USERPassword")}"
+    ])
+    outputs.upToDateWhen {false}
+}
+
 processResources {
     filesMatching('*.properties') {
         expand([
@@ -99,7 +113,7 @@ task run(type:Exec) {
 }
 
 task buildDocker(type:Exec) {
-    dependsOn 'setupDockerFiles', 'build'
+    dependsOn 'setupDockerFiles', 'setupDBFiles', 'build'
 
     doFirst {
         System.out.println 'Build docker: ' + version

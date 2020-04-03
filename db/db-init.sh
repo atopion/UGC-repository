@@ -1,6 +1,7 @@
 #!/bin/bash
 
-mysql --user=root --password=1111 --host=localhost --port=3306 --protocol=TCP <<MYSQL_SCRIPT
+# shellcheck disable=SC2154
+mysql --user=root --password=$dbRootPW --host=localhost --port=3306 --protocol=TCP <<MYSQL_SCRIPT
 CREATE DATABASE IF NOT EXISTS ugc_rep_1;
 USE ugc_rep_1;
 CREATE TABLE IF NOT EXISTS applications (
@@ -98,9 +99,9 @@ CREATE TABLE IF NOT EXISTS users (
   CONSTRAINT users_unique UNIQUE (user_keyhash, user_secret)
 );
 
-CREATE USER 'spring'@'%' identified by '2222';
-CREATE USER 'rest'@'%' identified by '3333';
-CREATE USER 'apps'@'%' identified by '4444';
+CREATE USER 'spring'@'%' identified by '$SQLPassword';
+CREATE USER 'rest'@'%' identified by '$RESTPassword';
+CREATE USER 'apps'@'%' identified by '$USERPassword';
 
 GRANT SELECT, UPDATE, INSERT, DELETE ON ugc_rep_1.* TO 'rest';
 GRANT SELECT ON ugc_rep_1.* TO 'spring';

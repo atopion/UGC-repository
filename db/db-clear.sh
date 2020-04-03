@@ -1,6 +1,7 @@
 #!/bin/bash
 
-mysql --user=root --password=1111 --host=localhost --port=3306 --protocol=TCP <<MYSQL_SCRIPT
+# shellcheck disable=SC2154
+mysql --user=root --password=$dbRootPW --host=localhost --port=3306 --protocol=TCP <<MYSQL_SCRIPT
 USE ugc_rep_1;
 DROP TABLE content_lists;
 DROP TABLE content_lists_records;
