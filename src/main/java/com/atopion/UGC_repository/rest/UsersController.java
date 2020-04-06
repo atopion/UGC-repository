@@ -3,7 +3,6 @@ package com.atopion.UGC_repository.rest;
 import com.atopion.UGC_repository.entities.UsersEntity;
 import com.atopion.UGC_repository.repositories.UsersRepository;
 import com.atopion.UGC_repository.util.CSVSerializer;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,8 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.text.SimpleDateFormat;
-
-import java.util.Date;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

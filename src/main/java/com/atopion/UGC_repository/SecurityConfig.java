@@ -36,6 +36,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     // Allow universal access to /sql
                     .antMatchers("/sql", "/sql/**").permitAll()
 
+                    .antMatchers("/metrics", "/metrics/**").permitAll()
+
                 .and()
                     .antMatcher("/rest/**").addFilterBefore(filter, BasicAuthenticationFilter.class)
                         .authenticationProvider(authProvider)

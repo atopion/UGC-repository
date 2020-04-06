@@ -19,10 +19,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.apache.tomcat:tomcat-jdbc:9.0.10'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
     implementation group: 'commons-codec', name: 'commons-codec', version: '1.14'
     implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.3.0.RELEASE'
+    implementation 'io.micrometer:micrometer-core:latest.release'
+    implementation 'io.micrometer:micrometer-registry-prometheus:latest.release'
     runtimeOnly 'mysql:mysql-connector-java'
 
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
@@ -143,9 +146,9 @@ def updateBuildNr() {
         versionProperties.load(new FileInputStream(versionPropertiesFile))
 
         def code = versionProperties['BUILD_NR'].toInteger() + 1
-
-        versionProperties['BUILD_NR']=code.toString()
+        versionProperties['BUILD_NR'] = code.toString()
         versionProperties.store(versionPropertiesFile.newWriter(), null)
+
 
         version = version + "-" + Integer.toString(code);
     }
