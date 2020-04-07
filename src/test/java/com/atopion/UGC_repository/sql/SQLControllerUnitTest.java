@@ -67,6 +67,7 @@ class SQLControllerUnitTest {
 
             when(mockMetaData.getColumnCount()).thenReturn(2);
             when(mockMetaData.getColumnName(anyInt())).thenReturn("HEADER");
+            when(mockMetaData.getColumnTypeName(anyInt())).thenReturn("VARCHAR");
             when(mockSet.getString(anyInt())).thenReturn("CELL");
             doAnswer(invocation -> {
                 String name = invocation.getArgument(0);
