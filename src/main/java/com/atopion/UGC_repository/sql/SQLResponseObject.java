@@ -5,10 +5,12 @@ import java.util.LinkedList;
 public class SQLResponseObject {
 
     private LinkedList<String> headers;
+    private LinkedList<String> types;
     private LinkedList<LinkedList<String>> rows;
 
     public SQLResponseObject() {
         this.headers = new LinkedList<>();
+        this.types = new LinkedList<>();
         this.rows = new LinkedList<>();
     }
 
@@ -18,6 +20,14 @@ public class SQLResponseObject {
 
     public void addHeader(String header) {
         this.headers.add(header);
+    }
+
+    public LinkedList<String> getTypes() {
+        return types;
+    }
+
+    public void addType(String type) {
+        this.types.add(type);
     }
 
     public LinkedList<LinkedList<String>> getRows() {

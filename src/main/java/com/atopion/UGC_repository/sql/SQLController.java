@@ -92,8 +92,10 @@ public class SQLController {
 
             ResultSetMetaData metaData = set.getMetaData();
 
-            for(int i = 1; i <= metaData.getColumnCount(); i++)
+            for(int i = 1; i <= metaData.getColumnCount(); i++) {
                 result.addHeader(metaData.getColumnName(i));
+                result.addType(metaData.getColumnTypeName(i));
+            }
 
             while(set.next()) {
                 LinkedList<String> tmp = new LinkedList<>();
@@ -119,9 +121,11 @@ public class SQLController {
         for(int j = 0; j < object.getRows().size(); j++) {
             result.append('{');
             for(int i = 0; i < object.getRows().get(j).size(); i++) {
-                result.append('"').append(object.getHeaders().get(i)).append("\":\"")
+                result.append('"').append(object.getHeaders().get(i))
+                      .append("\":").append(object.getTypes().get(i).toLowerCase().contains("int") ? "" : "\"")
                       .append(object.getRows().get(j).get(i))
-                      .append((i == object.getRows().get(j).size() -1 ? "\"" : "\","));
+                      .append(object.getTypes().get(i).toLowerCase().contains("int") ? "" : "\"")
+                      .append((i == object.getRows().get(j).size() -1 ? "" : ","));
             }
             result.append((j == object.getRows().size() -1 ? '}' : "},"));
         }
