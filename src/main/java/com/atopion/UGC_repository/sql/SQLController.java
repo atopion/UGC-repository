@@ -71,6 +71,18 @@ public class SQLController {
         return produceXML(queryResult);
     }
 
+    @RequestMapping(method = GET, path = "/sql", produces = "text/csv")
+    public @ResponseBody String sqlRequestCSV(@RequestParam(name = "query", defaultValue = "") String query) {
+
+        SQLResponseObject queryResult = executeQuery(query);
+
+        if(queryResult == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, query);
+        }
+
+        return produceCSV(queryResult);
+    }
+
 
     private SQLResponseObject executeQuery(String query) {
 
@@ -151,5 +163,31 @@ public class SQLController {
         result.append("</response>");
 
         return result.toString();
+    }
+
+    private String produceCSV(SQLResponseObject object) {
+
+        StringBuilder result = new StringBuilder();
+
+        for(int i = 0; i < object.getHeaders().size(); i++)
+            result.append(mask(object.getHeaders().get(i))).append(i == object.getHeaders().size() - 1 ? "" : ",");
+        result.append("\n");
+
+        for(LinkedList<String> row : object.getRows()) {
+
+            for(int i = 0; i < row.size(); i++)
+                result.append(mask(row.get(i))).append(i == row.size() -1 ? "" : ",");
+
+            result.append("\n");
+        }
+
+        return result.toString();
+    }
+
+    private static String mask(String str) {
+        if(!str.contains("\"") && !str.contains(","))
+            return str;
+        else
+            return "\"" + str.replace("\"", "\\\"") + "\"";
     }
 }
