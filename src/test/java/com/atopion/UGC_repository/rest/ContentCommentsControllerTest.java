@@ -54,6 +54,7 @@ public class ContentCommentsControllerTest {
 	@BeforeEach
 	void setUp() {
 		TimeZone.setDefault(TimeZone.getTimeZone("Europe/Berlin"));
+		System.out.println("Timezone: " + TimeZone.getDefault().getDisplayName());
 
 		try {
 			demo1 = new ContentCommentsEntity("demo_text1", format.parse("2001-01-01 00:00:00"), 1, 1, "demo_token1");
