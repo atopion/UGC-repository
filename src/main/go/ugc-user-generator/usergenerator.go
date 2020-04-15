@@ -4,14 +4,29 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"fmt"
-	"golang.org/x/crypto/bcrypt"
+	"io/ioutil"
+	"os"
 	"strings"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 func main() {
 
-	var m string = "898BAFF0B52F5D02DADB9191676FA3BD22929845EAC7ED29940CBBFD20E0D2FE0E8F25FD7397C399415D2A222CE522C29BD5F335FEDCEB19DFC865A6DEF010D7"
-	var master_key, err = hex.DecodeString(m)
+	//	var m string = "898BAFF0B52F5D02DADB9191676FA3BD22929845EAC7ED29940CBBFD20E0D2FE0E8F25FD7397C399415D2A222CE522C29BD5F335FEDCEB19DFC865A6DEF010D7"
+
+	file, err := os.Open("masterkey.txt")
+	if err != nil {
+		fmt.Printf("Could not open master key file: %v", err)
+	}
+	defer file.Close()
+
+	m, err := ioutil.ReadAll(file)
+	if err != nil {
+		fmt.Printf("Could not read master key file: %v", err)
+	}
+
+	master_key, err := hex.DecodeString(string(m))
 	if err != nil {
 		fmt.Printf("Could not read master key: %v", err)
 	}
