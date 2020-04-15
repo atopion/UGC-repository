@@ -3,3 +3,4 @@ secrets.properties
 /.idea/
 /build/
 /old/
+/db/logs/

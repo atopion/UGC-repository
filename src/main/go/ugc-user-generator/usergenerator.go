@@ -21,10 +21,12 @@ func main() {
 	}
 	defer file.Close()
 
-	m, err := ioutil.ReadAll(file)
+	b, err := ioutil.ReadAll(file)
 	if err != nil {
 		fmt.Printf("Could not read master key file: %v", err)
 	}
+
+	m := strings.Replace(string(b), "\n", "", -1)
 
 	master_key, err := hex.DecodeString(string(m))
 	if err != nil {

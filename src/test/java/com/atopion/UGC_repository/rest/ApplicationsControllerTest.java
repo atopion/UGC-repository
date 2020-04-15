@@ -613,7 +613,7 @@ public class ApplicationsControllerTest {
 
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_JSON_VALUE));
-
+			System.out.println("Response: " + result.getResponse().getContentAsString());
 
 			assertTrue("Could not find expected id 3: ", repository.existsById(3));
 			assertEquals("Could not find expected entry: ", demo3, repository.findById(3).orElse(null));
