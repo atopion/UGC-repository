@@ -84,7 +84,8 @@ public class APIAuthenticationProvider implements AuthenticationProvider {
 
     public APIAuthenticationProvider(@Qualifier("userDataSource") DataSource dataSource, @Autowired String masterKey) {
         this.dataSource = dataSource;
-        this.masterKey = masterKey;
+        this.masterKey = masterKey;            System.out.println("AUTHENTICATION: " + DISABLE_AUTH);
+
     }
 
     @Override

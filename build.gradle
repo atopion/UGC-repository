@@ -112,7 +112,7 @@ test {
 
 task run(type:Exec) {
     dependsOn 'build'
-    commandLine 'java', '-jar', 'build/libs/UGC-repository-' + version + '.jar'
+    commandLine 'java', '-jar', "build/libs/UGC-repository-${-> version}.jar"
 }
 
 task buildDocker(type:Exec) {

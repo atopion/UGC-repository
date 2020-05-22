@@ -1,0 +1,80 @@
+POST https://localhost:8443/rest/webannotation/
+Accept: application/ld+json; profile="http://www.w3.org/ns/anno.jsonld"
+Content-Type: application/ld+json; profile="http://www.w3.org/ns/anno.jsonld"
+
+{
+  "id" : "https://data.forum-wissen.de/rest/annotations/2",
+  "created" : "2020-04-25 02:00:00",
+  "modified" : "2020-04-25 02:00:00",
+  "generated" : "2020-04-25 02:00:00",
+  "canonical" : "https://hdl.handle.net/21.11107/record_DE-MUS-069123_118",
+  "generator" : {
+    "id" : "https://sammlungsportal.uni-goettingen.de/user/kheck",
+    "nickname" : "kheck",
+    "name" : "Karsten Heck",
+    "email" : "heck@kustodie.uni-goettingen.de",
+    "emailsSha1" : "171bc3343d089b46d57f111b2939ad8a6b565a0f",
+    "homepage" : "https://www.uni-goettingen.de/de/521338.html"
+  },
+  "motivation" : "describing",
+  "creator" : {
+    "id" : "https://sammlungsportal.uni-goettingen.de/user/kheck",
+    "nickname" : "kheck",
+    "name" : "Karsten Heck",
+    "email" : "heck@kustodie.uni-goettingen.de",
+    "emailsSha1" : "171bc3343d089b46d57f111b2939ad8a6b565a0f",
+    "homepage" : "https://www.uni-goettingen.de/de/521338.html"
+  },
+  "via" : "https://sammlungen.uni-goettingen.de/objekt/record_DE-MUS-069123_118/1/-/",
+  "body" : {
+    "id" : "https://data.forum-wissen.de/annotations/body/2",
+    "processing_language" : "de",
+    "text_direction" : "ltr",
+    "value" : "Eine interessante Kugel",
+    "modified" : "2020-04-25 02:00:00",
+    "created" : "2020-04-25 02:00:00",
+    "canonical" : "https://hdl.handle.net/21.11107/record_DE-MUS-069123_118",
+    "type" : "TextualBody",
+    "format" : "text/html",
+    "purpose" : "describing",
+    "scope" : "https://sammlungen.uni-goettingen.de/mirador/",
+    "styleClass" : "blue"
+  },
+  "target" : {
+    "id" : "https://data.forum-wissen.de/annotations/target/2",
+    "processing_language" : "de",
+    "text_direction" : "ltr",
+    "canonical" : "https://hdl.handle.net/21.11107/record_DE-MUS-069123_118",
+    "source" : "https://sammlungen.uni-goettingen.de/rest/image/record_DE-MUS-069123_118/i118_0.jpg",
+    "state" : {
+      "type" : "TimeState",
+      "sourceDate" : "2020-04-25 02:00:00",
+      "cached" : "https://sammlungen.uni-goettingen.de/objekt/record_DE-MUS-069123_118/1/-/"
+    },
+    "type" : "SpecificResource",
+    "language" : "de",
+    "accessibility" : "resizeText/CSSEnabled",
+    "renderedVia" : {
+      "id" : "https://www.google.com/intl/de_de/chrome/",
+      "type" : "Software"
+    },
+    "selector" : {
+      "value" : "/full/!400,400/0/default.jpg",
+      "conformsTo" : "https://iiif.io/api/image/2.1/#region",
+      "type" : "FragmentSelector"
+    },
+    "rights" : "https://www.deutsche-digitale-bibliothek.de/content/lizenzen/rv-fz"
+  },
+  "audience" : {
+    "id" : "https://container.uni-goettingen.de/roles/Studenten",
+    "type" : "Studenten"
+  },
+  "type" : "Annotation",
+  "stylesheet" : {
+    "value" : ".blue { color: blue }",
+    "type" : "CssStylesheet3"
+  },
+  "@context" : "http://www.w3.org/ns/anno.jsonld"
+}
+
+###

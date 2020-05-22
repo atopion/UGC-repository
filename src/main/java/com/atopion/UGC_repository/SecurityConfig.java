@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
@@ -44,12 +45,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         // Allow authorized access to /rest
                         .authorizeRequests().antMatchers("/rest", "/rest/**").authenticated()
                     // Deny everything else
-                    .anyRequest().denyAll();
+                    .anyRequest().denyAll()
 
                 /*.and()
-                    .httpBasic()
+                    .httpBasic()*/
+                /* .and()
+                    .headers().cacheControl().disable()*/
 
                 .and()
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);*/
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 }

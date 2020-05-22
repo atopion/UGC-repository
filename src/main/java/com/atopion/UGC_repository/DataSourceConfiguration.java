@@ -10,6 +10,7 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import javax.sql.DataSource;
 import java.util.Objects;
@@ -17,7 +18,7 @@ import java.util.Objects;
 @Configuration
 public class DataSourceConfiguration {
 
-    @Primary
+    /*@Primary
     @Bean
     @Autowired
     public DataSource restDataSource(@Qualifier("REST") RESTConfiguration config) {
@@ -37,19 +38,12 @@ public class DataSourceConfiguration {
         hikariConfig.setInitializationFailTimeout(-1);
 
         return new HikariDataSource(hikariConfig);
-    }
+    }*/
 
 
-    @Bean
+    /*@Bean
     @Autowired
     public DataSource sqlDataSource(@Qualifier("SQL") SQLConfiguration config) {
-
-        /*HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setJdbcUrl(config.url);
-        hikariConfig.setUsername(config.getUsername());
-        hikariConfig.setPassword(config.getPassword());
-        hikariConfig.setDriverClassName(config.driverClassName);
-        hikariConfig.setInitializationFailTimeout(-1);*/
 
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(config.url);
@@ -66,21 +60,12 @@ public class DataSourceConfiguration {
         hikariConfig.setInitializationFailTimeout(-1);
 
         return new HikariDataSource(hikariConfig);
-    }
+    }*/
 
-    @Bean
+    /*@Bean
     @Autowired
     @Qualifier("USERDB")
     public DataSource userDataSource(@Qualifier("USER") USERConfiguration config) {
-
-        /*System.out.println(config);
-
-        HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setJdbcUrl(config.getUrl());
-        hikariConfig.setUsername(config.getUsername());
-        hikariConfig.setPassword(config.getPassword());
-        hikariConfig.setDriverClassName(config.getDriverClassName());
-        hikariConfig.setInitializationFailTimeout(-1);*/
 
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(config.url);
@@ -97,9 +82,9 @@ public class DataSourceConfiguration {
         hikariConfig.setInitializationFailTimeout(-1);
 
         return new HikariDataSource(hikariConfig);
-    }
+    }*/
 
-    @Configuration
+    /*@Configuration
     @ConfigurationProperties(prefix = "app.sql.datasource")
     @Qualifier("SQL")
     public static class SQLConfiguration {
@@ -179,7 +164,7 @@ public class DataSourceConfiguration {
     }
 
 
-    @Configuration
+    /*@Configuration
     @ConfigurationProperties(prefix = "app.rest.datasource")
     @Qualifier("REST")
     public static class RESTConfiguration {
@@ -256,9 +241,9 @@ public class DataSourceConfiguration {
         public void setMaximumPoolSize(int maximumPoolSize) {
             this.maximumPoolSize = maximumPoolSize;
         }
-    }
+    }*/
 
-
+    /*
     //@Primary
     @Configuration
     @ConfigurationProperties(prefix = "app.user.datasource")
@@ -337,5 +322,5 @@ public class DataSourceConfiguration {
         public void setMaximumPoolSize(int maximumPoolSize) {
             this.maximumPoolSize = maximumPoolSize;
         }
-    }
+    }*/
 }

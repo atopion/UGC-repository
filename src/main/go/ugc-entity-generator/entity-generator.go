@@ -151,7 +151,7 @@ func parseDDL(ddl string) Entity {
 
 func produceEntityFile(entity Entity) string {
 
-	var base string = `package com.atopion.UGC_repository.entities;
+	var base string = `package com.atopion.UGC_repository.rep.entities;
     
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -267,7 +267,7 @@ public class ` + entity.name_upper + `Entity {
 
 func produceRepositoryFile(entity Entity) string {
 
-	var base string = `package com.atopion.UGC_repository.entities;
+	var base string = `package com.atopion.UGC_repository.rep.entities;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -303,10 +303,10 @@ public interface ` + entity.name_upper + `Repository extends JpaRepository<` + e
 
 func produceControllerFile(entity Entity) string {
 
-	var base string = `package com.atopion.UGC_repository.rest;
+	var base string = `package com.atopion.UGC_repository.rep.rest;
 
-import com.atopion.UGC_repository.entities.` + entity.name_upper + `Entity;
-import com.atopion.UGC_repository.entities.` + entity.name_upper + `Repository;
+import com.atopion.UGC_repository.rep.entities.` + entity.name_upper + `Entity;
+import com.atopion.UGC_repository.rep.entities.` + entity.name_upper + `Repository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -710,10 +710,10 @@ public class ` + entity.name_upper + `Controller {
 
 func produceControllerTestFile(entity Entity) string {
 
-	var base string = `package com.atopion.UGC_repository.rest;
+	var base string = `package com.atopion.UGC_repository.rep.rest;
 
-import com.atopion.UGC_repository.entities.` + entity.name_upper + `Entity;
-import com.atopion.UGC_repository.entities.` + entity.name_upper + `Repository;
+import com.atopion.UGC_repository.rep.entities.` + entity.name_upper + `Entity;
+import com.atopion.UGC_repository.rep.entities.` + entity.name_upper + `Repository;
 import com.atopion.UGC_repository.testutil.AccessTokens;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,5 +1,9 @@
 package com.atopion.UGC_repository;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
 import org.apache.tomcat.util.descriptor.web.SecurityCollection;
@@ -7,24 +11,24 @@ import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.Formatter;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
 import org.springframework.web.accept.ContentNegotiationStrategy;
 import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @Configuration
+@EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
 
     @Override
@@ -90,6 +94,39 @@ public class WebConfig implements WebMvcConfigurer {
                     }
                 }
             }
+            else if(webRequest.getDescription(false).contains("/rest/webannotation")) {
+                String format = webRequest.getParameter("format");
+                if(format == null) {
+                    String header = webRequest.getHeader("Accept");
+                    if(header == null)
+                        return Collections.singletonList(MediaType.valueOf("application/ld+json"));
+                    else {
+                        String[] contents = header.replaceAll(".*;[a-zA-Z0-9.;:-_/\"]*,", ",").split(",");
+                        for(String type : contents) {
+                            switch (type) {
+                                case "application/ld+json":
+                                    return Collections.singletonList(MediaType.valueOf("application/ld+json"));
+                                case "application/json":
+                                    return Collections.singletonList(MediaType.APPLICATION_JSON);
+                                case "application/xml":
+                                    return Collections.singletonList(MediaType.APPLICATION_XML);
+                            }
+                        }
+                        return Collections.singletonList(MediaType.valueOf("application/ld+json"));
+                    }
+                }
+                else {
+                    switch (format) {
+                        case "json-ld":
+                            return Collections.singletonList(MediaType.valueOf("application/ld+json"));
+                        case "json":
+                            return Collections.singletonList(MediaType.APPLICATION_JSON);
+                        case "xml":
+                            return Collections.singletonList(MediaType.APPLICATION_XML);
+                    }
+                    return Collections.singletonList(MediaType.valueOf("application/ld+json"));
+                }
+            }
             else if(webRequest.getDescription(false).contains("/rest")) {
                 String format = webRequest.getParameter("format");
                 if(format == null) {
@@ -132,12 +169,26 @@ public class WebConfig implements WebMvcConfigurer {
         }
     }
 
+    /*
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
+        registry.addMapping("/rest")
                 .allowedOrigins("*")
-                .allowedMethods("GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS");
+                .allowedMethods("GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .maxAge(3600);
+        registry.addMapping("/rest/webannotation")
+                .allowedOrigins("*")
+                .allowedMethods("GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .maxAge(3600);
+        registry.addMapping("/sql")
+                .allowedOrigins("*")
+                .allowedMethods("GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .maxAge(3600);
     }
+    */
 
 
     @Bean
@@ -179,5 +230,18 @@ public class WebConfig implements WebMvcConfigurer {
         connector.setSecure(false);
         connector.setRedirectPort(443);
         return connector;
+    }
+
+
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
+        builder.serializationInclusion(JsonInclude.Include.NON_NULL);
+        builder.serializationInclusion(JsonInclude.Include.NON_EMPTY);
+        builder.featuresToEnable(SerializationFeature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED);
+        builder.indentOutput(true); //.dateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+        builder.featuresToEnable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+        converters.add(new MappingJackson2HttpMessageConverter(builder.build()));
+        converters.add(new MappingJackson2XmlHttpMessageConverter(builder.createXmlMapper(true).build()));
     }
 }

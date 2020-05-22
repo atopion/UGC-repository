@@ -59,6 +59,8 @@ public class CSVSerializer {
     }
 
     private static String mask(String str) {
+        if(str == null)
+            return "";
         if(!str.contains("\"") && !str.contains(","))
             return str;
         else

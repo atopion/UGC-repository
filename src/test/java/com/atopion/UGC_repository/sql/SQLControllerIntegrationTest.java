@@ -1,9 +1,9 @@
 package com.atopion.UGC_repository.sql;
 
-import com.atopion.UGC_repository.entities.ApplicationsEntity;
-import com.atopion.UGC_repository.repositories.ApplicationsRepository;
-import com.atopion.UGC_repository.entities.UsersEntity;
-import com.atopion.UGC_repository.repositories.UsersRepository;
+import com.atopion.UGC_repository.rest.entities.ApplicationsEntity;
+import com.atopion.UGC_repository.rest.repositories.ApplicationsRepository;
+import com.atopion.UGC_repository.rest.entities.UsersEntity;
+import com.atopion.UGC_repository.rest.repositories.UsersRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

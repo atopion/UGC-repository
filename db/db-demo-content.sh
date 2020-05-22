@@ -78,4 +78,111 @@ REPLACE INTO users (user_keyhash, user_secret)
 REPLACE INTO users (user_keyhash, user_secret)
   VALUES ("\$2a\$08\$CZPeu/SwfgaekcsgeBo.rusyrJhWSlhd2peiiA3PVxuNCukg5KNp2", "811E7A29B8E186F81F2607B35028B9092A8F4C853A33B7A6D50B72323DFA1D73113D67DC70F725B269005860F3D7B507B2D4D0BBCD097A039F57B1D78C589FBD");
 
+USE webannotations;
+
+REPLACE INTO web_annotation(web_annotation_id, id, created, modified, generated, bodyValue, canonical)
+  VALUES (1, "https://data.forum-wissen.de/rest/annotations/1", "2020-04-24 12:00:00", "2020-04-24 12:01:00", "2020-04-24 12:00:10", NULL, "https://hdl.handle.net/21.11107/record_DE-MUS-069123_69");
+
+REPLACE INTO web_annotation_body(body_id, id, processing_language, text_direction, value, modified, created, canonical, source, annotation_id, choice_id)
+  VALUES (1, "https://data.forum-wissen.de/annotations/body/1", "de", "ltr", "Dort ist etwas abgesplittert.", "2020-04-24 12:01:00", "2020-04-24 12:00:00", "https://hdl.handle.net/21.11107/record_DE-MUS-069123_69", NULL, 1, NULL);
+
+REPLACE INTO web_annotation_target(target_id, id, value, processing_language, text_direction, canonical, source, annotation_id)
+  VALUES (1, "https://data.forum-wissen.de/annotations/target/1", NULL, "de", "ltr", "https://hdl.handle.net/21.11107/record_DE-MUS-069123_69", "https://sammlungen.uni-goettingen.de/rest/image/record_DE-MUS-069123_69/i69_0.jpg", 1);
+
+REPLACE INTO web_annotation_agent(agent_id, id, nickname, annotation_id, body_id)
+  VALUES (1, "https://sammlungsportal.uni-goettingen.de/user/kheck", "kheck", 1, NULL);
+
+REPLACE INTO web_annotation_state(state_id, id, type, sourceDateStart, sourceDateEnd, value, body_id, target_id, refiningState, refiningSelector)
+  VALUES (1, NULL, "TimeState", NULL, NULL, NULL, NULL, 1, NULL, NULL);
+
+REPLACE INTO web_annotation_accessibility(accessibility_id, accessibility, target_id, body_id)
+  VALUES (1, "resizeText/CSSEnabled", 1, NULL);
+
+REPLACE INTO web_annotation_agent_email(agent_email_id, email, agent_id)
+  VALUES (1, "heck@kustodie.uni-goettingen.de", 1);
+
+REPLACE INTO web_annotation_agent_homepage(agent_homepage_id, homepage, agent_id)
+  VALUES (1, "https://www.uni-goettingen.de/de/521338.html", 1);
+
+REPLACE INTO web_annotation_agent_name(agent_name_id, name, agent_id)
+  VALUES (1, "Karsten Heck", 1);
+
+REPLACE INTO web_annotation_audience(audience_id, id, annotation_id)
+  VALUES (1, "https://container.uni-goettingen.de/roles/Kustodie", 1);
+
+REPLACE INTO web_annotation_cached(cached_id, cached, state_id)
+  VALUES (1, "https://sammlungen.uni-goettingen.de/objekt/record_DE-MUS-069123_69/1/-/", 1);
+
+REPLACE INTO web_annotation_context(context_id, context, annotation_id)
+  VALUES (1, "http://www.w3.org/ns/anno.jsonld", 1);
+
+REPLACE INTO web_annotation_email_sha1(agent_email_sha1_id, email_sha1, agent_id)
+  VALUES (1, "171bc3343d089b46d57f111b2939ad8a6b565a0f", 1);
+
+REPLACE INTO web_annotation_format(format_id, format, body_id, target_id)
+  VALUES (1, "text/html", 1, NULL);
+
+REPLACE INTO web_annotation_format(format_id, format, body_id, target_id)
+  VALUES (2, "text/html", NULL, 1);
+
+REPLACE INTO web_annotation_language(language_id, language, body_id, target_id)
+  VALUES (1, "de", 1, NULL);
+
+REPLACE INTO web_annotation_language(language_id, language, body_id, target_id)
+  VALUES (1, "de", NULL, 1);
+
+REPLACE INTO web_annotation_motivation(motivation_id, motivation, annotation_id)
+  VALUES (1, "commenting", 1);
+
+REPLACE INTO web_annotation_purpose(purpose_id, purpose, body_id, target_id)
+  VALUES (1, "commenting", 1, NULL);
+
+REPLACE INTO web_annotation_rendered_via(rendered_via_id, id, type, body_id, target_id)
+  VALUES (1, "https://www.google.com/intl/de_de/chrome/", "Software", NULL, 1);
+
+REPLACE INTO web_annotation_rights(rights_id, rights, annotation_id, body_id, target_id)
+  VALUES (1, "http://creativecommons.org/licenses/by-nc/4.0/", 1, NULL, NULL);
+
+REPLACE INTO web_annotation_rights(rights_id, rights, annotation_id, body_id, target_id)
+  VALUES (1, "http://creativecommons.org/licenses/by-nc/4.0/", NULL, 1, NULL);
+
+REPLACE INTO web_annotation_rights(rights_id, rights, annotation_id, body_id, target_id)
+  VALUES (1, "https://www.deutsche-digitale-bibliothek.de/content/lizenzen/rv-fz", NULL, NULL, 1);
+
+REPLACE INTO web_annotation_scope(scope_id, id, body_id, target_id)
+  VALUES (1, "https://sammlungen.uni-goettingen.de/mirador/", 1, NULL);
+
+REPLACE INTO web_annotation_selector(selector_id, value, conformsTo, exact, prefix, suffix, startPos, endPos, startSelector, endSelector, refiningSelector, body_id, target_id)
+  VALUES (1, "/770,500,150,150/!1000,1000/0/default.jpg", "https://iiif.io/api/image/2.1/#region", NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+
+REPLACE INTO web_annotation_source_date(source_date_id, source_date, state_id)
+  VALUES (1, "2020-04-24 12:01:00", 1);
+
+REPLACE INTO web_annotation_style_class(style_class_id, style_class, body_id, target_id)
+  VALUES (1, "red", 1, NULL);
+
+REPLACE INTO web_annotation_stylesheet(stylesheet_id, value, annotation_id)
+  VALUES (1, ".red { color: red }", 1);
+
+REPLACE INTO web_annotation_type(type_id, type, annotation_id, body_id, target_id, agent_id, audience_id, stylesheet_id, selector_id)
+  VALUES (1, "Annotation", 1, NULL, NULL, NULL, NULL, NULL, NULL);
+REPLACE INTO web_annotation_type(type_id, type, annotation_id, body_id, target_id, agent_id, audience_id, stylesheet_id, selector_id)
+  VALUES (2, "TextualBody", NULL, 1, NULL, NULL, NULL, NULL, NULL);
+REPLACE INTO web_annotation_type(type_id, type, annotation_id, body_id, target_id, agent_id, audience_id, stylesheet_id, selector_id)
+  VALUES (3, "SpecificResource", NULL, NULL, 1, NULL, NULL, NULL, NULL);
+REPLACE INTO web_annotation_type(type_id, type, annotation_id, body_id, target_id, agent_id, audience_id, stylesheet_id, selector_id)
+  VALUES (4, "Person", NULL, NULL, NULL, 1, NULL, NULL, NULL);
+REPLACE INTO web_annotation_type(type_id, type, annotation_id, body_id, target_id, agent_id, audience_id, stylesheet_id, selector_id)
+  VALUES (5, "KustodieMitarbeiter", NULL, NULL, NULL, NULL, 1, NULL, NULL);
+REPLACE INTO web_annotation_type(type_id, type, annotation_id, body_id, target_id, agent_id, audience_id, stylesheet_id, selector_id)
+  VALUES (6, "CssStylesheet", NULL, NULL, NULL, NULL, NULL, 1, NULL);
+REPLACE INTO web_annotation_type(type_id, type, annotation_id, body_id, target_id, agent_id, audience_id, stylesheet_id, selector_id)
+  VALUES (7, "FragmentSelector", NULL, NULL, NULL, NULL, NULL, NULL, 1);
+
+REPLACE INTO web_annotation_via(via_id, via, annotation_id, target_id, body_id)
+  VALUES (1, "https://sammlungen.uni-goettingen.de/objekt/record_DE-MUS-069123_69/1/", 1, NULL, NULL);
+
+
+
+
 MYSQL_SCRIPT

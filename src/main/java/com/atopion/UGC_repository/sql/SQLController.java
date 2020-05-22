@@ -22,7 +22,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @Controller
 public class SQLController {
 
-    private DataSource sqlDataSource;
+    private final DataSource sqlDataSource;
 
     private final Logger logger = LoggerFactory.getLogger(SQLController.class);
 

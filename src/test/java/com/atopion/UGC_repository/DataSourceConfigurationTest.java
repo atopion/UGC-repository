@@ -1,5 +1,7 @@
 package com.atopion.UGC_repository;
 
+import com.atopion.UGC_repository.rest.RestDataSourceConfig;
+import com.atopion.UGC_repository.sql.SQLDataSourceConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -38,7 +40,7 @@ class DataSourceConfigurationTest {
 
     @Autowired
     @Qualifier("SQL")
-    private DataSourceConfiguration.SQLConfiguration sqlConfiguration;
+    private SQLDataSourceConfig.SQLConfiguration sqlConfiguration;
 
 
     @Value("${app.rest.datasource.url}")
@@ -62,7 +64,7 @@ class DataSourceConfigurationTest {
 
     @Autowired
     @Qualifier("REST")
-    private DataSourceConfiguration.RESTConfiguration restConfiguration;
+    private RestDataSourceConfig.RESTConfiguration restConfiguration;
 
 
 
@@ -84,7 +86,7 @@ class DataSourceConfigurationTest {
 
     @Autowired
     @Qualifier("USER")
-    private DataSourceConfiguration.USERConfiguration userConfiguration;
+    private UserDataSourceConfig.USERConfiguration userConfiguration;
 
 
     @Test
@@ -96,7 +98,7 @@ class DataSourceConfigurationTest {
         assertEquals(valueSQLDriverClassName, sqlConfiguration.getDriverClassName());
         assertEquals(valueSQLMaximumPoolSize, sqlConfiguration.getMaximumPoolSize());
 
-        DataSourceConfiguration.SQLConfiguration testConfig = new DataSourceConfiguration.SQLConfiguration();
+        SQLDataSourceConfig.SQLConfiguration testConfig = new SQLDataSourceConfig.SQLConfiguration();
         testConfig.setUrl(valueSQLUrl);
         testConfig.setUsername(valueSQLUsername);
         testConfig.setPassword(valueSQLPassword);
@@ -123,7 +125,7 @@ class DataSourceConfigurationTest {
         assertEquals(valueRESTDriverClassName, restConfiguration.getDriverClassName());
         assertEquals(valueRESTMaximumPoolSize, restConfiguration.getMaximumPoolSize());
 
-        DataSourceConfiguration.RESTConfiguration testConfig = new DataSourceConfiguration.RESTConfiguration();
+        RestDataSourceConfig.RESTConfiguration testConfig = new RestDataSourceConfig.RESTConfiguration();
         testConfig.setUrl(valueRESTUrl);
         testConfig.setUsername(valueRESTUsername);
         testConfig.setPassword(valueRESTPassword);
@@ -150,7 +152,7 @@ class DataSourceConfigurationTest {
         assertEquals(valueUSERPassword, userConfiguration.getPassword());
         assertEquals(valueUSERDriverClassName, userConfiguration.getDriverClassName());
 
-        DataSourceConfiguration.USERConfiguration testConfig = new DataSourceConfiguration.USERConfiguration();
+        UserDataSourceConfig.USERConfiguration testConfig = new UserDataSourceConfig.USERConfiguration();
         testConfig.setUrl(valueUSERUrl);
         testConfig.setUsername(valueUSERUsername);
         testConfig.setPassword(valueUSERPassword);
