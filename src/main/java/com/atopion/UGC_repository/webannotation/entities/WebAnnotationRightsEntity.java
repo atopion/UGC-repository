@@ -121,6 +121,9 @@ public class WebAnnotationRightsEntity {
 
 	@Override
 	public String toString() {
-		return "WebAnnotationRightsEntity{rights_id=" + rights_id + ", rights='" + rights + "', annotationEntity=" + annotationEntity + ", bodyEntity=" + bodyEntity + ", targetEntity=" + targetEntity + "}";
+		return "WebAnnotationRightsEntity{rights_id=" + rights_id + ", rights='" + rights +
+				"', annotationEntity=" + (annotationEntity == null ? "null" : annotationEntity.getWebAnnotationId()) +
+				", bodyEntity=" + (bodyEntity == null ? "null" : bodyEntity.getBodyId()) +
+				", targetEntity=" + (targetEntity == null ? "null" : targetEntity.getTargetId()) + "}";
 	}
 }

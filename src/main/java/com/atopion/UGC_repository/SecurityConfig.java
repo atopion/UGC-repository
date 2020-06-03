@@ -32,11 +32,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                    // Allow statics
+                    // Allow universal access to statics
                     .antMatchers("/css/*", "/js/*", "/favicon.ico").permitAll()
                     // Allow universal access to /sql
                     .antMatchers("/sql", "/sql/**").permitAll()
-
+                    // Allow universal access to /metrics
                     .antMatchers("/metrics", "/metrics/**").permitAll()
 
                 .and()

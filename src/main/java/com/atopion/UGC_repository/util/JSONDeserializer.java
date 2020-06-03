@@ -121,12 +121,14 @@ public class JSONDeserializer<T> extends StdDeserializer<T> {
             else
                 return (T) new WebAnnotationLanguageEntity(p.getValueAsString(), null, (WebAnnotationTargetEntity) p.getCurrentValue());
         } else if(vc == WebAnnotationRightsEntity.class) {
-            if (p.getCurrentValue().getClass().equals(WebAnnotationRightsEntity.class))
+            if (val != null && val.getClass().equals(WebAnnotationRightsEntity.class))
                 return (T) new WebAnnotationRightsEntity(p.getValueAsString(), (WebAnnotationEntity) p.getCurrentValue(), null, null);
-            if (p.getCurrentValue().getClass().equals(WebAnnotationBodyEntity.class))
+            else if (val != null && val.getClass().equals(WebAnnotationBodyEntity.class))
                 return (T) new WebAnnotationRightsEntity(p.getValueAsString(), null, (WebAnnotationBodyEntity) p.getCurrentValue(), null);
-            else
+            else if (val != null && val.getClass().equals(WebAnnotationTargetEntity.class))
                 return (T) new WebAnnotationRightsEntity(p.getValueAsString(), null, null, (WebAnnotationTargetEntity) p.getCurrentValue());
+            else
+                return (T) p.readValueAs(vc);
         } else if(vc == WebAnnotationContextEntity.class) {
             return (T) new WebAnnotationContextEntity(p.getValueAsString(), (WebAnnotationEntity) p.getCurrentValue());
         } else if(vc == WebAnnotationAudienceEntity.class) {

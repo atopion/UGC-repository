@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.*;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -53,18 +54,18 @@ public class WebAnnotationEntity {
 	@Column(name = "canonical", columnDefinition = "varchar(500)")
 	private String canonical;
 
-	@OneToMany(mappedBy = "annotationEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "annotationEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	@JsonDeserialize(using = JSONDeserializer.AgentEntity.class)
 	private Set<WebAnnotationAgentEntity> generator;
 
-	@OneToMany(mappedBy = "annotationEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "annotationEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JsonSerialize(using = JSONSetSerializer.MotivationSetSerializer.class)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	@JsonDeserialize(using = JSONDeserializer.MotivationEntity.class)
 	private Set<WebAnnotationMotivationEntity> motivation;
 
-	@OneToMany(mappedBy = "annotationEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "annotationEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JsonSerialize(using = JSONSetSerializer.ContextSetSerializer.class)
 	@JsonDeserialize(using = JSONDeserializer.ContextEntity.class)
 	@JacksonXmlProperty(localName = "context")
@@ -72,50 +73,51 @@ public class WebAnnotationEntity {
 	@JsonProperty("@context")
 	private Set<WebAnnotationContextEntity> context;
 
-	@OneToMany(mappedBy = "annotationEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "annotationEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	@JsonDeserialize(using = JSONDeserializer.AgentEntity.class)
 	private Set<WebAnnotationAgentEntity> creator;
 
-	@OneToMany(mappedBy = "annotationEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "annotationEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JsonSerialize(using = JSONSetSerializer.ViaSetSerializer.class)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	@JsonDeserialize(using = JSONDeserializer.ViaEntity.class)
 	private Set<WebAnnotationViaEntity> via;
 
-	@OneToMany(mappedBy = "annotationEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "annotationEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	@JsonDeserialize(using = JSONDeserializer.BodyEntity.class)
 	private Set<WebAnnotationBodyEntity> body;
 
-	@OneToMany(mappedBy = "annotationEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "annotationEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	@JsonDeserialize(using = JSONDeserializer.TargetEntity.class)
 	private Set<WebAnnotationTargetEntity> target;
 
-	@OneToMany(mappedBy = "annotationEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "annotationEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JsonSerialize(using = JSONSetSerializer.RightsSetSerializer.class)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	@JsonDeserialize(using = JSONDeserializer.RightsEntity.class)
 	private Set<WebAnnotationRightsEntity> rights;
 
-	@OneToMany(mappedBy = "annotationEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "annotationEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	@JsonDeserialize(using = JSONDeserializer.AudienceEntity.class)
 	private Set<WebAnnotationAudienceEntity> audience;
 
-	@OneToMany(mappedBy = "annotationEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "annotationEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JsonSerialize(using = JSONSetSerializer.TypeSetSerializer.class)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	@JsonDeserialize(using = JSONDeserializer.TypeEntity.class)
 	private Set<WebAnnotationTypeEntity> type;
 
-	@OneToMany(mappedBy = "annotationEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "annotationEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	@JsonDeserialize(using = JSONDeserializer.StylesheetEntity.class)
 	private Set<WebAnnotationStylesheetEntity> stylesheet;
 
 	protected WebAnnotationEntity() {}
+
 
 	public WebAnnotationEntity(int web_annotation_id, String id, Date created, Date modified, Date generated, String bodyValue, String canonical, Set<WebAnnotationAgentEntity> generator, Set<WebAnnotationMotivationEntity> motivation, Set<WebAnnotationContextEntity> context, Set<WebAnnotationAgentEntity> creator, Set<WebAnnotationViaEntity> via, Set<WebAnnotationBodyEntity> body, Set<WebAnnotationTargetEntity> target, Set<WebAnnotationRightsEntity> rights, Set<WebAnnotationAudienceEntity> audience, Set<WebAnnotationTypeEntity> type, Set<WebAnnotationStylesheetEntity> stylesheet) {
 		this.web_annotation_id = web_annotation_id;
@@ -136,6 +138,7 @@ public class WebAnnotationEntity {
 		this.audience = audience;
 		this.type = type;
 		this.stylesheet = stylesheet;
+
 	}
 
 	public WebAnnotationEntity(String id, Date created, Date modified, Date generated, String bodyValue, String canonical, Set<WebAnnotationAgentEntity> generator, Set<WebAnnotationMotivationEntity> motivation, Set<WebAnnotationContextEntity> context, Set<WebAnnotationAgentEntity> creator, Set<WebAnnotationViaEntity> via, Set<WebAnnotationBodyEntity> body, Set<WebAnnotationTargetEntity> target, Set<WebAnnotationRightsEntity> rights, Set<WebAnnotationAudienceEntity> audience, Set<WebAnnotationTypeEntity> type, Set<WebAnnotationStylesheetEntity> stylesheet) {
@@ -156,6 +159,7 @@ public class WebAnnotationEntity {
 		this.audience = audience;
 		this.type = type;
 		this.stylesheet = stylesheet;
+		System.out.println("SingleRights: " + this.rights);
 	}
 
 	public void setWebAnnotationId(int web_annotation_id) {
@@ -223,6 +227,11 @@ public class WebAnnotationEntity {
 		this.generator = generator;
 	}
 
+	public void resetGenerator(Set<WebAnnotationAgentEntity> generator) {
+		this.generator.clear();
+		if(generator != null) this.generator.addAll(generator);
+	}
+
 	@JsonSetter("generator")
 	public void setSingleGenerator(WebAnnotationAgentEntity generator) {
 		this.generator = Set.of(generator);
@@ -236,6 +245,11 @@ public class WebAnnotationEntity {
 		this.motivation = motivation;
 	}
 
+	public void resetMotivation(Set<WebAnnotationMotivationEntity> motivation) {
+		this.motivation.clear();
+		if(motivation != null) this.motivation.addAll(motivation);
+	}
+
 	@JsonSetter("motivation")
 	public void setSingleMotivation(WebAnnotationMotivationEntity motivation) {
 		this.motivation = Set.of(motivation);
@@ -247,6 +261,11 @@ public class WebAnnotationEntity {
 
 	public void setContext(Set<WebAnnotationContextEntity> context) {
 		this.context = context;
+	}
+
+	public void resetContext(Set<WebAnnotationContextEntity> context) {
+		this.context.clear();
+		if(context != null) this.context.addAll(context);
 	}
 
 	@JsonSetter("context")
@@ -267,6 +286,11 @@ public class WebAnnotationEntity {
 		this.creator = creator;
 	}
 
+	public void resetCreator(Set<WebAnnotationAgentEntity> creator) {
+		this.creator.clear();
+		if(creator != null) this.creator.addAll(creator);
+	}
+
 	@JsonSetter("creator")
 	public void setSingleCreator(WebAnnotationAgentEntity creator) {
 		this.creator = Set.of(creator);
@@ -278,6 +302,11 @@ public class WebAnnotationEntity {
 
 	public void setVia(Set<WebAnnotationViaEntity> via) {
 		this.via = via;
+	}
+
+	public void resetVia(Set<WebAnnotationViaEntity> via) {
+		this.via.clear();
+		if(via != null) this.via.addAll(via);
 	}
 
 	@JsonSetter("via")
@@ -293,6 +322,11 @@ public class WebAnnotationEntity {
 		this.body = body;
 	}
 
+	public void resetBody(Set<WebAnnotationBodyEntity> body) {
+		this.body.clear();
+		if(body != null) this.body.addAll(body);
+	}
+
 	@JsonSetter("body")
 	public void setSingleBody(WebAnnotationBodyEntity body) {
 		this.body = Set.of(body);
@@ -304,6 +338,11 @@ public class WebAnnotationEntity {
 
 	public void setTarget(Set<WebAnnotationTargetEntity> target) {
 		this.target = target;
+	}
+
+	public void resetTarget(Set<WebAnnotationTargetEntity> target) {
+		this.target.clear();
+		if(target != null) this.target.addAll(target);
 	}
 
 	@JsonSetter("target")
@@ -319,6 +358,11 @@ public class WebAnnotationEntity {
 		this.rights = rights;
 	}
 
+	public void resetRights(Set<WebAnnotationRightsEntity> rights) {
+		this.rights.clear();
+		if(rights != null) this.rights.addAll(rights);
+	}
+
 	@JsonSetter("rights")
 	public void setSingleRights(WebAnnotationRightsEntity rights) {
 		this.rights = Set.of(rights);
@@ -330,6 +374,11 @@ public class WebAnnotationEntity {
 
 	public void setAudience(Set<WebAnnotationAudienceEntity> audience) {
 		this.audience = audience;
+	}
+
+	public void resetAudience(Set<WebAnnotationAudienceEntity> audience) {
+		this.audience.clear();
+		if(audience != null) this.audience.addAll(audience);
 	}
 
 	@JsonSetter("audience")
@@ -345,6 +394,11 @@ public class WebAnnotationEntity {
 		this.type = type;
 	}
 
+	public void resetType(Set<WebAnnotationTypeEntity> type) {
+		this.type.clear();
+		if(type != null) this.type.addAll(type);
+	}
+
 	@JsonSetter("type")
 	public void setSingleType(WebAnnotationTypeEntity type) {
 		this.type = Set.of(type);
@@ -356,6 +410,11 @@ public class WebAnnotationEntity {
 
 	public void setStylesheet(Set<WebAnnotationStylesheetEntity> stylesheet) {
 		this.stylesheet = stylesheet;
+	}
+
+	public void resetStylesheet(Set<WebAnnotationStylesheetEntity> stylesheet) {
+		this.stylesheet.clear();
+		if(stylesheet != null) this.stylesheet.addAll(stylesheet);
 	}
 
 	@JsonSetter("stylesheet")

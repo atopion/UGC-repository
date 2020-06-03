@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
+import org.apache.commons.lang3.tuple.Triple;
 import org.apache.tomcat.util.descriptor.web.SecurityCollection;
 import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
@@ -42,6 +43,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .mediaType("xml", MediaType.APPLICATION_XML)
                 .mediaType("html", MediaType.TEXT_HTML)
                 .mediaType("json", MediaType.APPLICATION_JSON)
+                .mediaType("json-ld", MediaType.valueOf("application/ld+json"))
                 .mediaType("", MediaType.APPLICATION_FORM_URLENCODED);
     }
 
@@ -55,6 +57,50 @@ public class WebConfig implements WebMvcConfigurer {
 
         @Override
         public List<MediaType> resolveMediaTypes(NativeWebRequest webRequest) {
+
+            String path = webRequest.getDescription(false);
+            String format = webRequest.getParameter("format");
+            String header = webRequest.getHeader("Accept");
+
+            List<Triple<String, String, MediaType>> values = List.of(
+                    Triple.of("json", "application/json", MediaType.APPLICATION_JSON),
+                    Triple.of("json-ld", "application/ld+json", MediaType.valueOf("application/ld+json")),
+                    Triple.of("xml", "application/xml", MediaType.APPLICATION_XML),
+                    Triple.of("html", "text/html", MediaType.TEXT_HTML),
+                    Triple.of("csv", "text/csv", MediaType.valueOf("text/csv"))
+            );
+
+            Optional<Triple<String, String, MediaType>> result = Optional.empty();
+
+            if (format != null) {
+                result = values
+                        .stream()
+                        .filter(v -> v.getLeft().equals(format))
+                        .findFirst();
+            } else if (header != null) {
+                result = Arrays.stream(header.replaceAll(".*;[a-zA-Z0-9.;:-_/\"]*,", ",").split(","))
+                        .map(t -> values.stream().filter(v -> v.getMiddle().equals(t)).findFirst())
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .findFirst();
+            }
+
+            if (result.isPresent()) {
+                return Collections.singletonList(result.get().getRight());
+            }
+
+            // Default values if neither format nor header is given (or are unknown)
+            if (path.contains("/sql")) {
+                return Collections.singletonList(MediaType.TEXT_HTML);
+            } else if (path.contains("/rest/webannotation")) {
+                return Collections.singletonList(MediaType.valueOf("application/ld+json"));
+            } else if (path.contains("/rest")) {
+                return Collections.singletonList(MediaType.APPLICATION_JSON);
+            } else {
+                return Collections.singletonList(MediaType.ALL);
+            }
+        }
+            /*
 
             if(webRequest.getDescription(false).contains("/sql")) {
                 String format = webRequest.getParameter("format");
@@ -166,7 +212,7 @@ public class WebConfig implements WebMvcConfigurer {
                 }
             }
             return Collections.singletonList(MediaType.ALL);
-        }
+        }*/
     }
 
     /*
@@ -231,7 +277,6 @@ public class WebConfig implements WebMvcConfigurer {
         connector.setRedirectPort(443);
         return connector;
     }
-
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {

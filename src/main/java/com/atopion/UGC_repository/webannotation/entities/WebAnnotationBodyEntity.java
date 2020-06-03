@@ -80,75 +80,75 @@ public class WebAnnotationBodyEntity {
 	@JoinColumn(name = "choice_id", columnDefinition = "int(10)")
 	private WebAnnotationBodyEntity choiceEntity;
 
-	@OneToMany(mappedBy = "bodyEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "bodyEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	@JsonDeserialize(using = JSONDeserializer.AgentEntity.class)
 	private Set<WebAnnotationAgentEntity> creator;
 
-	@OneToMany(mappedBy = "bodyEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "bodyEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JsonSerialize(using = JSONSetSerializer.ViaSetSerializer.class)
 	@JsonDeserialize(using = JSONDeserializer.ViaEntity.class)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	private Set<WebAnnotationViaEntity> via;
 
-	@OneToMany(mappedBy = "bodyEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "bodyEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	@JsonDeserialize(using = JSONDeserializer.StateEntity.class)
 	private Set<WebAnnotationStateEntity> state;
 
-	@OneToMany(mappedBy = "bodyEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "bodyEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JsonSerialize(using = JSONSetSerializer.TypeSetSerializer.class)
 	@JsonDeserialize(using = JSONDeserializer.TypeEntity.class)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	private Set<WebAnnotationTypeEntity> type;
 
-	@OneToMany(mappedBy = "bodyEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "bodyEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JsonSerialize(using = JSONSetSerializer.LanguageSetSerializer.class)
 	@JsonDeserialize(using = JSONDeserializer.LanguageEntity.class)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	private Set<WebAnnotationLanguageEntity> language;
 
-	@OneToMany(mappedBy = "bodyEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "bodyEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JsonSerialize(using = JSONSetSerializer.FormatSetSerializer.class)
 	@JsonDeserialize(using = JSONDeserializer.FormatEntity.class)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	private Set<WebAnnotationFormatEntity> format;
 
-	@OneToMany(mappedBy = "bodyEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "bodyEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JsonSerialize(using = JSONSetSerializer.AccessibilitySetSerializer.class)
 	@JsonDeserialize(using = JSONDeserializer.AccessibilityEntity.class)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	private Set<WebAnnotationAccessibilityEntity> accessibility;
 
-	@OneToMany(mappedBy = "bodyEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "bodyEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JsonDeserialize(using = JSONDeserializer.ViaEntity.class)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	private Set<WebAnnotationRenderedViaEntity> renderedVia;
 
-	@OneToMany(mappedBy = "bodyEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "bodyEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JsonSerialize(using = JSONSetSerializer.PurposeSetSerializer.class)
 	@JsonDeserialize(using = JSONDeserializer.PurposeEntity.class)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	private Set<WebAnnotationPurposeEntity> purpose;
 
-	@OneToMany(mappedBy = "bodyEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "bodyEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JsonSerialize(using = JSONSetSerializer.ScopeSetSerializer.class)
 	@JsonDeserialize(using = JSONDeserializer.ScopeEntity.class)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	private Set<WebAnnotationScopeEntity> scope;
 
-	@OneToMany(mappedBy = "bodyEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "bodyEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JsonSerialize(using = JSONSetSerializer.StyleClassSetSerializer.class)
 	@JsonDeserialize(using = JSONDeserializer.StyleClassEntity.class)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	private Set<WebAnnotationStyleClassEntity> styleClass;
 
-	@OneToMany(mappedBy = "bodyEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "bodyEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JsonDeserialize(using = JSONDeserializer.SelectorEntity.class)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	private Set<WebAnnotationSelectorEntity> selector;
 
-	@OneToMany(mappedBy = "bodyEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "bodyEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JsonSerialize(using = JSONSetSerializer.RightsSetSerializer.class)
 	@JsonDeserialize(using = JSONDeserializer.RightsEntity.class)
 	@JacksonXmlElementWrapper(useWrapping = false)

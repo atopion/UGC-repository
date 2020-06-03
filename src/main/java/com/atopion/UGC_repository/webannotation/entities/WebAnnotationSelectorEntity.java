@@ -88,25 +88,25 @@ public class WebAnnotationSelectorEntity {
 	@JoinColumn(name = "target_id", columnDefinition = "int(10)")
 	private WebAnnotationTargetEntity targetEntity;
 
-	@OneToMany(mappedBy = "selectorEntity", orphanRemoval = true, cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "selectorEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL },fetch = FetchType.EAGER)
 	@JsonSerialize(using = JSONSetSerializer.TypeSetSerializer.class)
 	@JsonDeserialize(using = JSONDeserializer.TypeEntity.class)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	private Set<WebAnnotationTypeEntity> type;
 
-	@OneToMany(mappedBy = "refiningSelector", orphanRemoval = true, cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "refiningSelector", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL },fetch = FetchType.EAGER)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	private Set<WebAnnotationStateEntity> refinedByState;
 
-	@OneToMany(mappedBy = "refiningSelector", orphanRemoval = true, cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "refiningSelector", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL },fetch = FetchType.EAGER)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	private Set<WebAnnotationSelectorEntity> refinedBySelector;
 
-	@OneToMany(mappedBy = "startSelector", orphanRemoval = true, cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "startSelector", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL },fetch = FetchType.EAGER)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	private Set<WebAnnotationSelectorEntity> startingSelector;
 
-	@OneToMany(mappedBy = "endSelector", orphanRemoval = true, cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "endSelector", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL },fetch = FetchType.EAGER)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	private Set<WebAnnotationSelectorEntity> endingSelector;
 

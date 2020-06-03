@@ -77,13 +77,13 @@ public class WebAnnotationStateEntity {
 	@JoinColumn(name = "refiningSelector", columnDefinition = "int(10)")
 	private WebAnnotationSelectorEntity refiningSelector;
 
-	@OneToMany(mappedBy = "stateEntity", orphanRemoval = true, cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "stateEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL },fetch = FetchType.EAGER)
 	@JsonSerialize(using = JSONSetSerializer.SourceDateSetSerializer.class)
 	@JsonDeserialize(using = JSONDeserializer.SourceDateEntity.class)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	private Set<WebAnnotationSourceDateEntity> sourceDate;
 
-	@OneToMany(mappedBy = "stateEntity", orphanRemoval = true, cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "stateEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL },fetch = FetchType.EAGER)
 	@JsonSerialize(using = JSONSetSerializer.CachedSetSerializer.class)
 	@JsonDeserialize(using = JSONDeserializer.CachedEntity.class)
 	@JacksonXmlElementWrapper(useWrapping = false)

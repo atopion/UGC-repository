@@ -34,7 +34,7 @@ public class WebAnnotationStylesheetEntity {
 	@JsonIgnore
 	private WebAnnotationEntity annotationEntity;
 
-	@OneToMany(mappedBy = "stylesheetEntity", orphanRemoval = true, cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "stylesheetEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL },fetch = FetchType.EAGER)
 	@JsonSerialize(using = JSONSetSerializer.TypeSetSerializer.class)
 	@JsonDeserialize(using = JSONDeserializer.TypeEntity.class)
 	@JacksonXmlElementWrapper(useWrapping = false)

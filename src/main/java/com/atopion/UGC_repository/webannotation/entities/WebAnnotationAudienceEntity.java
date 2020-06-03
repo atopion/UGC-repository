@@ -43,11 +43,11 @@ public class WebAnnotationAudienceEntity {
 	private String id;
 
 	@JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "annotation_id", nullable = false, columnDefinition = "int(10)")
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
+	@JoinColumn(name = "annotation_id", nullable = false, columnDefinition = "int(10)", updatable = false)
 	private WebAnnotationEntity annotationEntity;
 
-	@OneToMany(mappedBy = "audienceEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "audienceEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JsonSerialize(using = JSONSetSerializer.TypeSetSerializer.class)
 	@JsonDeserialize(using = JSONDeserializer.TypeEntity.class)
 	@JacksonXmlElementWrapper(useWrapping = false)

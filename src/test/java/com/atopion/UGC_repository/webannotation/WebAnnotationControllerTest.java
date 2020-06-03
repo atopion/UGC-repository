@@ -232,41 +232,6 @@ public class WebAnnotationControllerTest {
 					.andExpect(jsonPath("$.body.value", is("Eine interessante Kugel")))
 					.andExpect(jsonPath("$.@context", is("http://www.w3.org/ns/anno.jsonld")));
 
-			try (Connection connection = webAnnotationDataSource.getConnection();
-				 Statement statement = connection.createStatement()) {
-				printResultSet(statement.executeQuery("SELECT * FROM web_annotation"));
-				printResultSet(statement.executeQuery("SELECT * FROM web_annotation_accessibility"));
-				printResultSet(statement.executeQuery("SELECT * FROM web_annotation_agent"));
-				printResultSet(statement.executeQuery("SELECT * FROM web_annotation_agent_email"));
-				printResultSet(statement.executeQuery("SELECT * FROM web_annotation_agent_homepage"));
-				printResultSet(statement.executeQuery("SELECT * FROM web_annotation_agent_name"));
-				printResultSet(statement.executeQuery("SELECT * FROM web_annotation_audience"));
-				printResultSet(statement.executeQuery("SELECT * FROM web_annotation_body"));
-				printResultSet(statement.executeQuery("SELECT * FROM web_annotation_cached"));
-				printResultSet(statement.executeQuery("SELECT * FROM web_annotation_context"));
-				printResultSet(statement.executeQuery("SELECT * FROM web_annotation_email_sha1"));
-				printResultSet(statement.executeQuery("SELECT * FROM web_annotation_format"));
-				printResultSet(statement.executeQuery("SELECT * FROM web_annotation_language"));
-				printResultSet(statement.executeQuery("SELECT * FROM web_annotation_motivation"));
-				printResultSet(statement.executeQuery("SELECT * FROM web_annotation_purpose"));
-				printResultSet(statement.executeQuery("SELECT * FROM web_annotation_rendered_via"));
-				printResultSet(statement.executeQuery("SELECT * FROM web_annotation_rights"));
-				printResultSet(statement.executeQuery("SELECT * FROM web_annotation_scope"));
-				printResultSet(statement.executeQuery("SELECT * FROM web_annotation_selector"));
-				printResultSet(statement.executeQuery("SELECT * FROM web_annotation_source_date"));
-				printResultSet(statement.executeQuery("SELECT * FROM web_annotation_state"));
-				printResultSet(statement.executeQuery("SELECT * FROM web_annotation_style_class"));
-				printResultSet(statement.executeQuery("SELECT * FROM web_annotation_stylesheet"));
-				printResultSet(statement.executeQuery("SELECT * FROM web_annotation_target"));
-				printResultSet(statement.executeQuery("SELECT * FROM web_annotation_type"));
-				printResultSet(statement.executeQuery("SELECT * FROM web_annotation_via"));
-
-			} catch (Exception e) {
-				e.printStackTrace();
-				//fail("Unexpected exception occured: " + e.getMessage());
-
-			}
-
 		} catch (Exception e) {
 			fail("Unexpected exception occured: " + e.getMessage());
 			e.printStackTrace();
@@ -274,10 +239,64 @@ public class WebAnnotationControllerTest {
 	}
 
 
+	@Test
+	void test_PUT_functionality() {
+		try {
+			mvc.perform(withValidHeaders(put("/rest/webannotation/1")
+					.contentType("application/ld+json").content(annotationJSON)).secure(true))
+					.andDo(print())
+					.andExpect(status().isOk())
+					.andExpect(content().contentType("application/ld+json"))
+					.andExpect(jsonPath("$.id", is("https://data.forum-wissen.de/rest/annotations/1")))
+					.andExpect(jsonPath("$.@context", is("http://www.w3.org/ns/anno.jsonld")))
+					.andExpect(jsonPath("$.body.id", is("https://data.forum-wissen.de/annotations/body/2")));
 
-	private void printResultSet(ResultSet set) throws SQLException {
-		System.err.println();
-		System.err.println(CSVSerializer.serialize(set));
+			mvc.perform(withValidHeaders(get("/rest/webannotation/1")).secure(true))
+					.andDo(print())
+					.andExpect(status().isOk())
+					.andExpect(content().contentType("application/ld+json"))
+					.andExpect(jsonPath("$.id", is("https://data.forum-wissen.de/rest/annotations/1")))
+					.andExpect(jsonPath("$.@context", is("http://www.w3.org/ns/anno.jsonld")))
+					.andExpect(jsonPath("$.body.id", is("https://data.forum-wissen.de/annotations/body/2")));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Unexpected exception occured: " + e.getMessage());
+		}
+	}
+
+
+	private final String patchAnnotationJSON = "{\n" +
+			"  \"modified\" : \"2020-04-25 05:00:00\",\n" +
+			"  \"motivation\" : \"testing\"\n" +
+			"}";
+
+	@Test
+	void test_PATCH_functionality() {
+		try {
+			mvc.perform(withValidHeaders(patch("/rest/webannotation/1")
+					.contentType("application/ld+json").content(patchAnnotationJSON)).secure(true))
+					.andDo(print())
+					.andExpect(status().isOk())
+					.andExpect(content().contentType("application/ld+json"))
+					.andExpect(jsonPath("$.id", is("https://data.forum-wissen.de/rest/annotations/1")))
+					.andExpect(jsonPath("$.modified", is("2020-04-25 05:00:00")))
+					.andExpect(jsonPath("$.motivation", is("testing")))
+					.andExpect(jsonPath("$.body.id", is("https://data.forum-wissen.de/annotations/body/1")));
+
+			mvc.perform(withValidHeaders(get("/rest/webannotation/1")).secure(true))
+					.andDo(print())
+					.andExpect(status().isOk())
+					.andExpect(content().contentType("application/ld+json"))
+					.andExpect(jsonPath("$.id", is("https://data.forum-wissen.de/rest/annotations/1")))
+					.andExpect(jsonPath("$.modified", is("2020-04-25 05:00:00")))
+					.andExpect(jsonPath("$.motivation", is("testing")))
+					.andExpect(jsonPath("$.body.id", is("https://data.forum-wissen.de/annotations/body/1")));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Unexpected exception occured: " + e.getMessage());
+		}
 	}
 
 	/*

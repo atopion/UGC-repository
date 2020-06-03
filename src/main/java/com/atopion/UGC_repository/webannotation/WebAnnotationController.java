@@ -199,6 +199,7 @@ public class WebAnnotationController {
 		try {
 			return putWebAnnotationInternal(param, id);
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -271,25 +272,54 @@ public class WebAnnotationController {
 		Optional<WebAnnotationEntity> opt = repository.findById(id);
 		if(opt.isPresent()) {
 			WebAnnotationEntity entity = opt.get();
-			entity.setId(param.getId());
 			entity.setCreated(param.getCreated());
 			entity.setModified(param.getModified());
 			entity.setGenerated(param.getGenerated());
 			entity.setBodyValue(param.getBodyValue());
 			entity.setCanonical(param.getCanonical());
-			entity.setGenerator(param.getGenerator());
-			entity.setMotivation(param.getMotivation());
-			entity.setContext(param.getContext());
-			entity.setCreator(param.getCreator());
-			entity.setVia(param.getVia());
-			entity.setBody(param.getBody());
-			entity.setTarget(param.getTarget());
-			entity.setRights(param.getRights());
-			entity.setAudience(param.getAudience());
-			entity.setType(param.getType());
-			entity.setStylesheet(param.getStylesheet());
-			repository.save(entity);
-			return new ResponseEntity<>(entity, HttpStatus.OK);
+
+			if(param.getGenerator() != null) param.getGenerator().forEach(agent -> agent.setAnnotationEntity(entity));
+			entity.resetGenerator(param.getGenerator());
+
+			if(param.getMotivation() != null) param.getMotivation().forEach(motivation -> motivation.setAnnotationEntity(entity));
+			entity.resetMotivation(param.getMotivation());
+
+			if(param.getContext() != null) param.getContext().forEach(context -> context.setAnnotationEntity(entity));
+			entity.resetContext(param.getContext());
+
+			if(param.getCreator() != null) param.getCreator().forEach(creator -> creator.setAnnotationEntity(entity));
+			entity.resetCreator(param.getCreator());
+
+			if(param.getVia() != null) param.getVia().forEach(via -> via.setAnnotationEntity(entity));
+			entity.resetVia(param.getVia());
+
+			if(param.getBody() != null) param.getBody().forEach(body -> body.setAnnotationEntity(entity));
+			entity.resetBody(param.getBody());
+
+			if(param.getTarget() != null) param.getTarget().forEach(target -> target.setAnnotationEntity(entity));
+			entity.resetTarget(param.getTarget());
+
+			if(param.getRights() != null) param.getRights().forEach(rights -> rights.setAnnotationEntity(entity));
+			entity.resetRights(param.getRights());
+
+			if(param.getAudience() != null) param.getAudience().forEach(audience -> audience.setAnnotationEntity(entity));
+			entity.resetAudience(param.getAudience());
+			System.out.println(entity.getAudience());
+
+			if(param.getType() != null) param.getType().forEach(type -> type.setAnnotationEntity(entity));
+			entity.resetType(param.getType());
+
+			if(param.getStylesheet() != null) param.getStylesheet().forEach(stylesheet -> stylesheet.setAnnotationEntity(entity));
+			entity.resetStylesheet(param.getStylesheet());
+
+			try {
+				repository.save(entity);
+				return new ResponseEntity<>(entity, HttpStatus.OK);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+
 		} else {
 			// According to the specification, annotations can only be updated not created with PUT.
 			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
@@ -300,10 +330,12 @@ public class WebAnnotationController {
 	@PatchMapping(path = "{id}", consumes = { "application/ld+json", "application/xml" }, produces = { "application/ld+json", "application/xml" })
 	public ResponseEntity<WebAnnotationEntity> patchWebAnnotationJSONById(@PathVariable int id, @RequestBody WebAnnotationEntity param) {
 		try {
+			System.err.println("PATCH");
 			return patchWebAnnotationInternal(param, id);
 		} catch (ResponseStatusException e) {
 			throw e;
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -386,43 +418,80 @@ public class WebAnnotationController {
 		WebAnnotationEntity entity = repository.findById(id)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-		if(param.getId() != null)
-			entity.setId(param.getId());
 		if(param.getCreated() != null)
 			entity.setCreated(param.getCreated());
 		if(param.getModified() != null)
-			entity.setModified(param.getModified());
+        	entity.setModified(param.getModified());
 		if(param.getGenerated() != null)
-			entity.setGenerated(param.getGenerated());
+        	entity.setGenerated(param.getGenerated());
 		if(param.getBodyValue() != null)
-			entity.setBodyValue(param.getBodyValue());
+        	entity.setBodyValue(param.getBodyValue());
 		if(param.getCanonical() != null)
-			entity.setCanonical(param.getCanonical());
-		if(param.getGenerator() != null)
-			entity.setGenerator(param.getGenerator());
-		if(param.getMotivation() != null)
-			entity.setMotivation(param.getMotivation());
-		if(param.getContext() != null)
-			entity.setContext(param.getContext());
-		if(param.getCreator() != null)
-			entity.setCreator(param.getCreator());
-		if(param.getVia() != null)
-			entity.setVia(param.getVia());
-		if(param.getBody() != null)
-			entity.setBody(param.getBody());
-		if(param.getTarget() != null)
-			entity.setTarget(param.getTarget());
-		if(param.getRights() != null)
-			entity.setRights(param.getRights());
-		if(param.getAudience() != null)
-			entity.setAudience(param.getAudience());
-		if(param.getType() != null)
-			entity.setType(param.getType());
-		if(param.getStylesheet() != null)
-			entity.setStylesheet(param.getStylesheet());
+        	entity.setCanonical(param.getCanonical());
 
-		repository.save(entity);
-		return new ResponseEntity<>(entity, HttpStatus.OK);
+		if(param.getGenerator() != null) {
+	        param.getGenerator().forEach(el -> el.setAnnotationEntity(entity));
+    	    entity.setGenerator(param.getGenerator());
+		}
+
+		if(param.getMotivation() != null) {
+        	param.getMotivation().forEach(el -> el.setAnnotationEntity(entity));
+        	entity.setMotivation(param.getMotivation());
+		}
+
+		if(param.getContext() != null) {
+        	param.getContext().forEach(el -> el.setAnnotationEntity(entity));
+        	entity.setContext(param.getContext());
+		}
+
+		if(param.getCreator() != null) {
+			param.getCreator().forEach(el -> el.setAnnotationEntity(entity));
+			entity.setCreator(param.getCreator());
+		}
+
+		if(param.getVia() != null) {
+        	param.getVia().forEach(el -> el.setAnnotationEntity(entity));
+        	entity.setVia(param.getVia());
+		}
+
+		if(param.getBody() != null) {
+        	param.getBody().forEach(el -> el.setAnnotationEntity(entity));
+        	entity.setBody(param.getBody());
+		}
+
+		if(param.getTarget() != null) {
+        	param.getTarget().forEach(el -> el.setAnnotationEntity(entity));
+        	entity.setTarget(param.getTarget());
+		}
+
+		if(param.getRights() != null) {
+        	param.getRights().forEach(el -> el.setAnnotationEntity(entity));
+        	entity.setRights(param.getRights());
+		}
+
+		if(param.getAudience() != null) {
+	        param.getAudience().forEach(el -> el.setAnnotationEntity(entity));
+	        entity.setAudience(param.getAudience());
+		}
+
+		if(param.getType() != null) {
+        	param.getType().forEach(el -> el.setAnnotationEntity(entity));
+        	entity.setType(param.getType());
+		}
+
+		if(param.getStylesheet() != null) {
+			param.getStylesheet().forEach(stylesheet -> stylesheet.setAnnotationEntity(entity));
+			entity.resetStylesheet(param.getStylesheet());
+		}
+
+		try {
+			repository.save(entity);
+			return new ResponseEntity<>(entity, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
 	}
 
 // ============================================== DELETE REQUEST =======================================================

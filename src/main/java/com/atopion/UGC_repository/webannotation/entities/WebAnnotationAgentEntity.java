@@ -46,25 +46,25 @@ public class WebAnnotationAgentEntity {
 	@JoinColumn(name = "body_id", columnDefinition = "int(10)")
 	private WebAnnotationBodyEntity bodyEntity;
 
-	@OneToMany(mappedBy = "agentEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "agentEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JsonSerialize(using = JSONSetSerializer.AgentNameSetSerializer.class)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	@JsonDeserialize(using = JSONDeserializer.AgentNameEntity.class)
 	private Set<WebAnnotationAgentNameEntity> name;
 
-	@OneToMany(mappedBy = "agentEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "agentEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JsonSerialize(using = JSONSetSerializer.AgentEmailSetSerializer.class)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	@JsonDeserialize(using = JSONDeserializer.AgentEmailEntity.class)
 	private Set<WebAnnotationAgentEmailEntity> email;
 
-	@OneToMany(mappedBy = "agentEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "agentEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JsonSerialize(using = JSONSetSerializer.EmailSha1SetSerializer.class)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	@JsonDeserialize(using = JSONDeserializer.EmailSha1Entity.class)
 	private Set<WebAnnotationEmailSha1Entity> emailsSha1;
 
-	@OneToMany(mappedBy = "agentEntity", orphanRemoval = true, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "agentEntity", orphanRemoval = true, cascade = { CascadeType.PERSIST, CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JsonSerialize(using = JSONSetSerializer.AgentHomepageSetSerializer.class)
 	@JacksonXmlElementWrapper(useWrapping = false)
 	@JsonDeserialize(using = JSONDeserializer.AgentHomepageEntity.class)
