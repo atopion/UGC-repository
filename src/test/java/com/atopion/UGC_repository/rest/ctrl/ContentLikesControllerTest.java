@@ -3,6 +3,7 @@ package com.atopion.UGC_repository.rest.ctrl;
 import com.atopion.UGC_repository.rest.entities.ContentLikesEntity;
 import com.atopion.UGC_repository.rest.repositories.ContentLikesRepository;
 import com.atopion.UGC_repository.testutil.AccessTokens;
+import com.atopion.UGC_repository.testutil.AssertionHelpers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -92,8 +93,8 @@ public class ContentLikesControllerTest {
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_JSON_VALUE));
 
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultJSON[0].replace(" ", "").replace("	", "")));
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultJSON[1].replace(" ", "").replace("	", "")));
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultJSON[0]);
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultJSON[1]);
 
 		} catch (Exception e) {
 			fail("Unexpected exception occurred: " + e.getMessage());
@@ -110,8 +111,8 @@ public class ContentLikesControllerTest {
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_XML_VALUE));
 
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultXML[0].replace(" ", "").replace("	", "")));
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultXML[1].replace(" ", "").replace("	", "")));
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultXML[0]);
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultXML[1]);
 
 		} catch (Exception e) {
 			fail("Unexpected exception occurred: " + e.getMessage());
@@ -128,9 +129,9 @@ public class ContentLikesControllerTest {
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString("text/csv"));
 
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultCSV[0].replace(" ", "").replace("	", "")));
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultCSV[1].replace(" ", "").replace("	", "")));
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultCSV[2].replace(" ", "").replace("	", "")));
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultCSV[0]);
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultCSV[1]);
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultCSV[2]);
 
 		} catch (Exception e) {
 			fail("Unexpected exception occurred: " + e.getMessage());
@@ -147,9 +148,9 @@ public class ContentLikesControllerTest {
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.TEXT_HTML_VALUE));
 
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultHTML[0].replace(" ", "").replace("	", "")));
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultHTML[1].replace(" ", "").replace("	", "")));
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultHTML[2].replace(" ", "").replace("	", "")));
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultHTML[0]);
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultHTML[1]);
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultHTML[2]);
 
 		} catch (Exception e) {
 			fail("Unexpected exception occurred: " + e.getMessage());
@@ -181,8 +182,8 @@ public class ContentLikesControllerTest {
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_JSON_VALUE));
 
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultJSON[0].replace(" ", "").replace("	", "")));
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultJSON[1].replace(" ", "").replace("	", "")));
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultJSON[0]);
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultJSON[1]);
 
 		} catch (Exception e) {
 			fail("Unexpected exception occurred: " + e.getMessage());
@@ -199,8 +200,8 @@ public class ContentLikesControllerTest {
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_XML_VALUE));
 
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultXML[0].replace(" ", "").replace("	", "")));
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultXML[1].replace(" ", "").replace("	", "")));
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultXML[0]);
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultXML[1]);
 
 		} catch (Exception e) {
 			fail("Unexpected exception occurred: " + e.getMessage());
@@ -217,9 +218,9 @@ public class ContentLikesControllerTest {
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString("text/csv"));
 
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultCSV[0].replace(" ", "").replace("	", "")));
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultCSV[1].replace(" ", "").replace("	", "")));
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultCSV[2].replace(" ", "").replace("	", "")));
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultCSV[0]);
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultCSV[1]);
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultCSV[2]);
 
 		} catch (Exception e) {
 			fail("Unexpected exception occurred: " + e.getMessage());
@@ -236,9 +237,9 @@ public class ContentLikesControllerTest {
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.TEXT_HTML_VALUE));
 
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultHTML[0].replace(" ", "").replace("	", "")));
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultHTML[1].replace(" ", "").replace("	", "")));
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultHTML[2].replace(" ", "").replace("	", "")));
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultHTML[0]);
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultHTML[1]);
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultHTML[2]);
 
 		} catch (Exception e) {
 			fail("Unexpected exception occurred: " + e.getMessage());
@@ -270,7 +271,7 @@ public class ContentLikesControllerTest {
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_JSON_VALUE));
 
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultJSON[0].replace(" ", "").replace("	", "")));
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultJSON[0]);
 
 		} catch (Exception e) {
 			fail("Unexpected exception occurred: " + e.getMessage());
@@ -287,7 +288,7 @@ public class ContentLikesControllerTest {
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_XML_VALUE));
 
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultXML[0].replace(" ", "").replace("	", "")));
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultXML[0]);
 
 		} catch (Exception e) {
 			fail("Unexpected exception occurred: " + e.getMessage());
@@ -304,8 +305,8 @@ public class ContentLikesControllerTest {
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString("text/csv"));
 
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultCSV[0].replace(" ", "").replace("	", "")));
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultCSV[1].replace(" ", "").replace("	", "")));
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultCSV[0]);
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultCSV[1]);
 
 		} catch (Exception e) {
 			fail("Unexpected exception occurred: " + e.getMessage());
@@ -322,8 +323,8 @@ public class ContentLikesControllerTest {
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.TEXT_HTML_VALUE));
 
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultHTML[0].replace(" ", "").replace("	", "")));
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultHTML[1].replace(" ", "").replace("	", "")));
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultHTML[0]);
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultHTML[1]);
 
 		} catch (Exception e) {
 			fail("Unexpected exception occurred: " + e.getMessage());
@@ -355,7 +356,7 @@ public class ContentLikesControllerTest {
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_JSON_VALUE));
 
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultJSON[0].replace(" ", "").replace("	", "")));
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultJSON[0]);
 
 		} catch (Exception e) {
 			fail("Unexpected exception occurred: " + e.getMessage());
@@ -372,7 +373,7 @@ public class ContentLikesControllerTest {
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_XML_VALUE));
 
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultXML[0].replace(" ", "").replace("	", "")));
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultXML[0]);
 
 		} catch (Exception e) {
 			fail("Unexpected exception occurred: " + e.getMessage());
@@ -389,8 +390,8 @@ public class ContentLikesControllerTest {
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString("text/csv"));
 
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultCSV[0].replace(" ", "").replace("	", "")));
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultCSV[1].replace(" ", "").replace("	", "")));
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultCSV[0]);
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultCSV[1]);
 
 		} catch (Exception e) {
 			fail("Unexpected exception occurred: " + e.getMessage());
@@ -407,8 +408,8 @@ public class ContentLikesControllerTest {
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.TEXT_HTML_VALUE));
 
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultHTML[0].replace(" ", "").replace("	", "")));
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultHTML[1].replace(" ", "").replace("	", "")));
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultHTML[0]);
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultHTML[1]);
 
 		} catch (Exception e) {
 			fail("Unexpected exception occurred: " + e.getMessage());
@@ -440,7 +441,7 @@ public class ContentLikesControllerTest {
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_JSON_VALUE));
 
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultJSON[0].replace(" ", "").replace("	", "")));
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultJSON[0]);
 
 		} catch (Exception e) {
 			fail("Unexpected exception occurred: " + e.getMessage());
@@ -457,7 +458,7 @@ public class ContentLikesControllerTest {
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_XML_VALUE));
 
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultXML[0].replace(" ", "").replace("	", "")));
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultXML[0]);
 
 		} catch (Exception e) {
 			fail("Unexpected exception occurred: " + e.getMessage());
@@ -474,8 +475,8 @@ public class ContentLikesControllerTest {
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString("text/csv"));
 
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultCSV[0].replace(" ", "").replace("	", "")));
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultCSV[1].replace(" ", "").replace("	", "")));
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultCSV[0]);
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultCSV[1]);
 
 		} catch (Exception e) {
 			fail("Unexpected exception occurred: " + e.getMessage());
@@ -492,8 +493,8 @@ public class ContentLikesControllerTest {
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.TEXT_HTML_VALUE));
 
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultHTML[0].replace(" ", "").replace("	", "")));
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultHTML[1].replace(" ", "").replace("	", "")));
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultHTML[0]);
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultHTML[1]);
 
 		} catch (Exception e) {
 			fail("Unexpected exception occurred: " + e.getMessage());
@@ -525,7 +526,7 @@ public class ContentLikesControllerTest {
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_JSON_VALUE));
 
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultJSON[0].replace(" ", "").replace("	", "")));
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultJSON[0]);
 
 		} catch (Exception e) {
 			fail("Unexpected exception occurred: " + e.getMessage());
@@ -542,7 +543,7 @@ public class ContentLikesControllerTest {
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.APPLICATION_XML_VALUE));
 
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultXML[0].replace(" ", "").replace("	", "")));
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultXML[0]);
 
 		} catch (Exception e) {
 			fail("Unexpected exception occurred: " + e.getMessage());
@@ -559,8 +560,8 @@ public class ContentLikesControllerTest {
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString("text/csv"));
 
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultCSV[0].replace(" ", "").replace("	", "")));
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultCSV[1].replace(" ", "").replace("	", "")));
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultCSV[0]);
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultCSV[1]);
 
 		} catch (Exception e) {
 			fail("Unexpected exception occurred: " + e.getMessage());
@@ -577,8 +578,8 @@ public class ContentLikesControllerTest {
 			assertEquals("Wrong status code. ", 200, result.getResponse().getStatus());
 			assertThat("Wrong content type. ", result.getResponse().getContentType(), containsString(MediaType.TEXT_HTML_VALUE));
 
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultHTML[0].replace(" ", "").replace("	", "")));
-			assertThat("Could not find expected content. ", result.getResponse().getContentAsString().replace(" ", "").replace("\t", ""), containsString(resultHTML[1].replace(" ", "").replace("	", "")));
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultHTML[0]);
+			AssertionHelpers.assertResponseContainsText(result.getResponse(), resultHTML[1]);
 
 		} catch (Exception e) {
 			fail("Unexpected exception occurred: " + e.getMessage());

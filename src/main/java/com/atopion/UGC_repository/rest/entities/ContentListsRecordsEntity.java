@@ -1,7 +1,8 @@
 package com.atopion.UGC_repository.rest.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
- 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 
 import java.util.Objects;
@@ -19,6 +20,7 @@ public class ContentListsRecordsEntity {
 
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="Europe/Berlin")
 	@Column(name = "entry_created", nullable = false, columnDefinition = "datetime")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date entry_created;
 
 	@Column(name = "list_id", nullable = false, columnDefinition = "int")
